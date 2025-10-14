@@ -4,13 +4,63 @@
   <meta charset="UTF-8">
   <title>90秒タイマー</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #history { margin-top: 20px; }
-    button { margin-right: 10px; padding: 10px 20px; font-size: 16px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: #00ffcc;
+      color: #111;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00ccaa;
+    }
+
+    #countdown, #nextTime {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+
+    #history {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #history div {
+      background-color: #222;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-left: 4px solid #00ffcc;
+    }
   </style>
 </head>
 <body>
-  <h1>90秒タイマー</h1>
+  <h1>🚀 90秒タイマー</h1>
+  <!-- 以下はタイマー本体 -->
   <button onclick="startTimer()">タイマー開始</button>
   <button onclick="clearHistory()">履歴クリア</button>
   <p id="countdown">残り秒数: -</p>
@@ -69,3 +119,4 @@
   </script>
 </body>
 </html>
+
