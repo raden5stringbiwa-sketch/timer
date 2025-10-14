@@ -6,6 +6,7 @@
   <style>
     body { font-family: sans-serif; padding: 20px; }
     #history { margin-top: 20px; }
+    button { margin-right: 10px; padding: 10px 20px; font-size: 16px; }
   </style>
 </head>
 <body>
@@ -16,14 +17,20 @@
   <p id="nextTime">90秒後の時刻: -</p>
   <div id="history"></div>
 
+  <!-- 音声ファイルの読み込み -->
+  <audio id="thirtySecSound" src="30seconds.mp3" preload="auto"></audio>
+  <audio id="launchSound" src="launch.mp3" preload="auto"></audio>
+
   <script>
     let count = 0;
     let timer;
     let startTime;
+    let thirtySecPlayed = false;
 
     function startTimer() {
       clearInterval(timer);
       count++;
+      thirtySecPlayed = false;
       startTime = new Date();
       const future = new Date(startTime.getTime() + 90000);
       document.getElementById("nextTime").textContent = "90秒後の時刻: " + future.toLocaleTimeString();
@@ -34,12 +41,22 @@
         const remaining = 90 - elapsed;
         document.getElementById("countdown").textContent = "残り秒数: " + remaining + " 秒";
 
+        // 30秒前に音声再生（1回だけ）
+        if (remaining === 30 && !thirtySecPlayed) {
+          document.getElementById("thirtySecSound").play();
+          thirtySecPlayed = true;
+        }
+
+        // 0秒になったら発射音＋履歴追加
         if (remaining <= 0) {
           clearInterval(timer);
+          document.getElementById("launchSound").play();
+
           const log = `${count}回目、90秒経過しました！ [${now.toLocaleTimeString()}]`;
           const entry = document.createElement("div");
           entry.textContent = log;
           document.getElementById("history").appendChild(entry);
+
           startTimer(); // 自動再スタート
         }
       }, 1000);
