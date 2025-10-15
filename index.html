@@ -39,4 +39,86 @@
 
     #countdown, #nextTime {
       font-size: 24px;
-      margin
+      margin: 10px 0;
+    }
+
+    #history {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #history div {
+      background-color: #222;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-left: 4px solid #00ffcc;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 90秒タイマー 🏹</h1>
+  <button onclick="startTimer()">タイマー開始</button>
+  <button onclick="clearHistory()">履歴クリア</button>
+  <p id="countdown">残り秒数: -</p>
+  <p id="nextTime">90秒後の時刻: -</p>
+  <div id="history"></div>
+
+  <!-- 音声ファイルの読み込み -->
+  <audio id="thirtySecSound" src="30seconds.mp3" preload="auto"></audio>
+  <audio id="launchSound" src="launch.mp3" preload="auto"></audio>
+
+  <script>
+    let count = 0;
+    let timer;
+    let startTime;
+    let thirtySecPlayed = false;
+
+    function startTimer() {
+      clearInterval(timer);
+      count++;
+      thirtySecPlayed = false;
+      startTime = new Date();
+      const future = new Date(startTime.getTime() + 90000);
+      document.getElementById("nextTime").textContent = "90秒後の時刻: " + future.toLocaleTimeString();
+
+      // iOS対策：音声を事前に再生準備
+      document.getElementById("thirtySecSound").play().catch(() => {});
+      document.getElementById("launchSound").play().catch(() => {});
+
+      timer = setInterval(() => {
+        const now = new Date();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        const remaining = 90 - elapsed;
+        document.getElementById("countdown").textContent = "残り秒数: " + remaining + " 秒";
+
+        // 30秒前に音声再生（1回だけ）
+        if (remaining <= 30 && !thirtySecPlayed && remaining > 0) {
+          document.getElementById("thirtySecSound").play();
+          thirtySecPlayed = true;
+        }
+
+        // 0秒になったら発射音＋履歴追加
+        if (remaining <= 0) {
+          clearInterval(timer);
+          document.getElementById("launchSound").play();
+
+          const log = `${count}回目、90秒経過しました！ [${now.toLocaleTimeString()}]`;
+          const entry = document.createElement("div");
+          entry.textContent = log;
+          document.getElementById("history").appendChild(entry);
+
+          startTimer(); // 自動再スタート
+        }
+      }, 1000);
+    }
+
+    function clearHistory() {
+      document.getElementById("history").innerHTML = "";
+      count = 0;
+    }
+  </script>
+</body>
+</html>
