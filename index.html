@@ -59,7 +59,7 @@
   </style>
 </head>
 <body>
-  <h1>🚀 90秒タイマー 🏹</h1>
+  <h1>🚀 90秒タイマー 🔥</h1>
   <button onclick="startTimer()">タイマー開始</button>
   <button onclick="clearHistory()">履歴クリア</button>
   <p id="countdown">残り秒数: -</p>
@@ -84,9 +84,20 @@
       const future = new Date(startTime.getTime() + 90000);
       document.getElementById("nextTime").textContent = "90秒後の時刻: " + future.toLocaleTimeString();
 
-      // iOS対策：音声を事前に再生準備
-      document.getElementById("thirtySecSound").play().catch(() => {});
-      document.getElementById("launchSound").play().catch(() => {});
+      // iOS対策：音声を事前に再生してすぐ停止（音は鳴らない）
+      const thirtySec = document.getElementById("thirtySecSound");
+      const launch = document.getElementById("launchSound");
+
+      try {
+        thirtySec.play().then(() => {
+          thirtySec.pause();
+          thirtySec.currentTime = 0;
+        }).catch(() => {});
+        launch.play().then(() => {
+          launch.pause();
+          launch.currentTime = 0;
+        }).catch(() => {});
+      } catch (e) {}
 
       timer = setInterval(() => {
         const now = new Date();
@@ -96,14 +107,14 @@
 
         // 30秒前に音声再生（1回だけ）
         if (remaining <= 30 && !thirtySecPlayed && remaining > 0) {
-          document.getElementById("thirtySecSound").play();
+          thirtySec.play();
           thirtySecPlayed = true;
         }
 
         // 0秒になったら発射音＋履歴追加
         if (remaining <= 0) {
           clearInterval(timer);
-          document.getElementById("launchSound").play();
+          launch.play();
 
           const log = `${count}回目、90秒経過しました！ [${now.toLocaleTimeString()}]`;
           const entry = document.createElement("div");
