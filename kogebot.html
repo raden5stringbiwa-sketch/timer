@@ -142,38 +142,45 @@
       });
       document.getElementById("endSound").load();
 
-      timer = setInterval(() => {
-        const now = new Date();
-        const elapsed = Math.floor((now - startTime) / 1000);
-        const remaining = totalSeconds - elapsed;
-        const minutes = Math.floor(remaining / 60);
-        const seconds = remaining % 60;
-        document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
+     timer = setInterval(() => {
+  const now = new Date();
+  const elapsed = Math.floor((now - startTime) / 1000);
+  const remaining = totalSeconds - elapsed;
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
+  document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
 
-        if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
-          const { id, label } = eventMap[elapsed];
-          const audio = document.getElementById(id);
-          if (audio) {
-            audio.currentTime = 0;
-            audio.play();
-            const entry = document.createElement("div");
-            entry.textContent = `[${now.toLocaleTimeString()}] ${label}`;
-            document.getElementById("history").appendChild(entry);
-            playedEvents.add(elapsed);
-          }
-        }
+  if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
+    const { id, label } = eventMap[elapsed];
+    const audio = document.getElementById(id);
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
 
-        if (remaining <= 0) {
-          clearInterval(timer);
-          const endAudio = document.getElementById("endSound");
-          endAudio.currentTime = 0;
-          endAudio.play();
-          const entry = document.createElement("div");
-          entry.textContent = `[${now.toLocaleTimeString()}] 60分経過しました！`;
-          document.getElementById("history").appendChild(entry);
-        }
-      }, 1000);
+      const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+      const ss = String(elapsed % 60).padStart(2, '0');
+      const timestamp = now.toLocaleTimeString();
+      const entry = document.createElement("div");
+      entry.textContent = `${mm}分${ss}秒経過・${label}・${timestamp}`;
+      const history = document.getElementById("history");
+      history.insertBefore(entry, history.firstChild);
+
+      playedEvents.add(elapsed);
     }
+  }
+
+  if (remaining <= 0) {
+    clearInterval(timer);
+    const endAudio = document.getElementById("endSound");
+    endAudio.currentTime = 0;
+    endAudio.play();
+
+    const entry = document.createElement("div");
+    entry.textContent = `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
+    const history = document.getElementById("history");
+    history.insertBefore(entry, history.firstChild);
+  }
+}, 1000);
   </script>
 </body>
 </html>
