@@ -66,20 +66,18 @@
   <p id="nextTime">90秒後の時刻: -</p>
   <div id="history"></div>
 
-  <!-- 音声ファイルの読み込み -->
+  <!-- 音声ファイルの読み込み（30秒前のみ） -->
   <audio id="thirtySecSound" src="30seconds.mp3" preload="auto"></audio>
-  <audio id="launchSound" src="launch.mp3" preload="auto"></audio>
 
   <script>
     let count = 0;
     let timer;
     let startTime;
-    let thirtySecPlayed = false;
 
     function startTimer() {
       clearInterval(timer);
       count++;
-      thirtySecPlayed = false;
+      let thirtySecPlayed = false;
       startTime = new Date();
       const future = new Date(startTime.getTime() + 90000);
       document.getElementById("nextTime").textContent = "90秒後の時刻: " + future.toLocaleTimeString();
@@ -87,7 +85,6 @@
       // iOS対策：音声を事前に読み込み（音は鳴らさない）
       try {
         document.getElementById("thirtySecSound").load();
-        document.getElementById("launchSound").load();
       } catch (e) {}
 
       timer = setInterval(() => {
@@ -102,10 +99,9 @@
           thirtySecPlayed = true;
         }
 
-        // 0秒になったら発射音＋履歴追加
+        // 0秒になったら履歴追加＋自動再スタート
         if (remaining <= 0) {
           clearInterval(timer);
-          document.getElementById("launchSound").play();
 
           const log = `${count}回目、90秒経過しました！ [${now.toLocaleTimeString()}]`;
           const entry = document.createElement("div");
@@ -124,4 +120,3 @@
   </script>
 </body>
 </html>
-
