@@ -32,11 +32,31 @@
       margin-bottom: 6px;
       border-left: 4px solid #ff6600;
     }
+#startButton {
+  background: linear-gradient(45deg, #ff6600, #ff3300);
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #ff6600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+#startButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #ff3300;
+}
+
+    
   </style>
 </head>
 <body>
-  <h1>🤖 ろぼっとこげちゃん</h1>
-  <button onclick="startTimer()">タイマー開始</button>
+  <h1>🤖 ロボットこげちゃん</h1>
+ <button id="startButton" onclick="startTimer()"> タイマー開始 </button>
+
   <p id="countdown">残り時間: -</p>
   <p id="nextTime">60分後の時刻: -</p>
   <div id="history"></div>
