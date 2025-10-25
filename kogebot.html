@@ -135,7 +135,9 @@
         const now = new Date();
         const elapsed = Math.floor((now - startTime) / 1000);
         const remaining = totalSeconds - elapsed;
-        document.getElementById("countdown").textContent = "残り秒数: " + remaining + " 秒";
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+        document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
 
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
           const audioId = eventMap[elapsed];
