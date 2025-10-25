@@ -56,17 +56,24 @@
       margin-bottom: 6px;
       border-left: 4px solid #ff6600;
     }
+
+    #endVideo {
+      display: none;
+      margin-top: 30px;
+      max-width: 90%;
+      border: 4px solid #ff6600;
+      border-radius: 12px;
+    }
   </style>
 </head>
 <body>
   <h1>🤖 ろぼっとこげちゃん</h1>
   <button onclick="startTimer()">タイマー開始</button>
-  <button onclick="clearHistory()">履歴クリア</button>
-  <p id="countdown">残り秒数: -</p>
+  <p id="countdown">残り時間: -</p>
   <p id="nextTime">60分後の時刻: -</p>
   <div id="history"></div>
 
-  <!-- 音声ファイルの読み込み -->
+  <!-- 音声ファイル -->
   <audio id="buff90" src="buff_90sec.mp3" preload="auto"></audio>
   <audio id="buff30" src="buff_30sec.mp3" preload="auto"></audio>
   <audio id="buffSpawn" src="buff_spawn.mp3" preload="auto"></audio>
@@ -77,6 +84,10 @@
   <audio id="castle1min" src="castle_1min.mp3" preload="auto"></audio>
   <audio id="castleStart" src="castle_start.mp3" preload="auto"></audio>
   <audio id="center1min" src="center_1min.mp3" preload="auto"></audio>
+  <audio id="centerStart" src="center_start.mp3" preload="auto"></audio>
+
+  <!-- 終了時の動画 -->
+  <video id="endVideo" src="end.mp4" controls></video>
 
   <script>
     let count = 0;
@@ -86,33 +97,40 @@
     const playedEvents = new Set();
 
     const eventMap = {
-      150: "buff90",
-      210: "buff30",
-      240: "buffSpawn",
-      360: "tower1min",
-      420: "towerStart",
-      540: "point1min",
-      600: "pointSpawn",
-      660: "buff90",
-      720: "buff30",
-      750: "buffSpawn",
-      840: "castle1min",
-      900: "castleStart",
-      1260: "buff90",
-      1320: "buff30",
-      1350: "buffSpawn",
-      1440: "center1min",
-      1500: "center1min",
-      1740: "point1min",
-      1800: "pointSpawn",
-      1860: "buff90",
-      1920: "buff30",
-      1950: "buffSpawn",
-      2340: "point1min",
-      2400: "pointSpawn",
-      2460: "buff90",
-      2520: "buff30",
-      2550: "buffSpawn"
+      140: { id: "buff90", label: "バフ1分半前" },
+      210: { id: "buff30", label: "バフ30秒前" },
+      240: { id: "buffSpawn", label: "バフ湧くよ！" },
+      650: { id: "buff90", label: "バフ1分半前" },
+      720: { id: "buff30", label: "バフ30秒前" },
+      750: { id: "buffSpawn", label: "バフ湧くよ！" },
+      1250: { id: "buff90", label: "バフ1分半前" },
+      1320: { id: "buff30", label: "バフ30秒前" },
+      1350: { id: "buffSpawn", label: "バフ湧くよ！" },
+      1850: { id: "buff90", label: "バフ1分半前" },
+      1920: { id: "buff30", label: "バフ30秒前" },
+      1950: { id: "buffSpawn", label: "バフ湧くよ！" },
+      2450: { id: "buff90", label: "バフ1分半前" },
+      2520: { id: "buff30", label: "バフ30秒前" },
+      2550: { id: "buffSpawn", label: "バフ湧くよ！" },
+      3050: { id: "buff90", label: "バフ1分半前" },
+      3120: { id: "buff30", label: "バフ30秒前" },
+      3150: { id: "buffSpawn", label: "バフ湧くよ！" },
+      360: { id: "tower1min", label: "望楼1分前" },
+      420: { id: "towerStart", label: "望楼開始！" },
+      540: { id: "point1min", label: "1000ポイント1分前" },
+      600: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      1140: { id: "point1min", label: "1000ポイント1分前" },
+      1200: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      1740: { id: "point1min", label: "1000ポイント1分前" },
+      1800: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      2340: { id: "point1min", label: "1000ポイント1分前" },
+      2400: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      2940: { id: "point1min", label: "1000ポイント1分前" },
+      3000: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      840: { id: "castle1min", label: "2城・3城1分前" },
+      900: { id: "castleStart", label: "2城・3城開始！" },
+      1440: { id: "center1min", label: "中央1分前" },
+      1500: { id: "centerStart", label: "中央開始" }
     };
 
     function startTimer() {
@@ -122,12 +140,13 @@
       startTime = new Date();
       const future = new Date(startTime.getTime() + totalSeconds * 1000);
       document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
+      document.getElementById("endVideo").style.display = "none";
+      document.getElementById("endVideo").pause();
+      document.getElementById("endVideo").currentTime = 0;
 
-      // iOS対策：音声を事前に読み込み
-      Object.values(eventMap).forEach(id => {
+      Object.values(eventMap).forEach(e => {
         try {
-          const audio = document.getElementById(id);
-          audio.load();
+          document.getElementById(e.id).load();
         } catch (e) {}
       });
 
@@ -140,30 +159,10 @@
         document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
 
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
-          const audioId = eventMap[elapsed];
-          const audio = document.getElementById(audioId);
+          const { id, label } = eventMap[elapsed];
+          const audio = document.getElementById(id);
           if (audio) {
             audio.currentTime = 0;
             audio.play();
-            playedEvents.add(elapsed);
-          }
-        }
-
-        if (remaining <= 0) {
-          clearInterval(timer);
-          const log = `${count}回目、60分経過しました！ [${now.toLocaleTimeString()}]`;
-          const entry = document.createElement("div");
-          entry.textContent = log;
-          document.getElementById("history").appendChild(entry);
-          startTimer(); // 自動再スタート（不要ならこの行を削除）
-        }
-      }, 1000);
-    }
-
-    function clearHistory() {
-      document.getElementById("history").innerHTML = "";
-      count = 0;
-    }
-  </script>
-</body>
-</html>
+            const entry = document.createElement("div");
+            entry.textContent = `[${new Date().toLocaleTimeString()}
