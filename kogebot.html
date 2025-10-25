@@ -90,7 +90,6 @@
   <video id="endVideo" src="end.mp4" controls></video>
 
   <script>
-    let count = 0;
     let timer;
     let startTime;
     const totalSeconds = 3600;
@@ -135,7 +134,6 @@
 
     function startTimer() {
       clearInterval(timer);
-      count++;
       playedEvents.clear();
       startTime = new Date();
       const future = new Date(startTime.getTime() + totalSeconds * 1000);
@@ -143,6 +141,7 @@
       document.getElementById("endVideo").style.display = "none";
       document.getElementById("endVideo").pause();
       document.getElementById("endVideo").currentTime = 0;
+      document.getElementById("history").innerHTML = "";
 
       Object.values(eventMap).forEach(e => {
         try {
@@ -161,8 +160,4 @@
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
           const { id, label } = eventMap[elapsed];
           const audio = document.getElementById(id);
-          if (audio) {
-            audio.currentTime = 0;
-            audio.play();
-            const entry = document.createElement("div");
-            entry.textContent = `[${new Date().toLocaleTimeString()}
+         
