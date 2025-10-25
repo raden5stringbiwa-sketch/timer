@@ -2,125 +2,44 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>90秒タイマー</title>
+  <title>タイマー選択ページ</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       background-color: #111;
       color: #eee;
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      padding: 30px;
+      padding: 50px;
     }
 
     h1 {
-      font-size: 48px;
-      font-weight: bold;
-      letter-spacing: 2px;
+      font-size: 40px;
       color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
-      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffcc;
+      margin-bottom: 40px;
     }
 
-    button {
-      margin: 10px;
-      padding: 12px 24px;
-      font-size: 18px;
-      border: none;
-      border-radius: 6px;
-      background-color: #00ffcc;
+    a {
+      display: block;
+      margin: 20px auto;
+      padding: 15px 30px;
+      font-size: 20px;
       color: #111;
-      cursor: pointer;
+      background-color: #00ffcc;
+      text-decoration: none;
+      border-radius: 8px;
+      width: 250px;
       transition: 0.3s;
     }
 
-    button:hover {
+    a:hover {
       background-color: #00ccaa;
-    }
-
-    #countdown, #nextTime {
-      font-size: 24px;
-      margin: 10px 0;
-    }
-
-    #history {
-      margin-top: 30px;
-      text-align: left;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #history div {
-      background-color: #222;
-      padding: 8px;
-      margin-bottom: 6px;
-      border-left: 4px solid #00ffcc;
     }
   </style>
 </head>
 <body>
-  <h1>🚀 90秒タイマー</h1>
-  <button onclick="startTimer()">タイマー開始</button>
-  <button onclick="clearHistory()">履歴クリア</button>
-  <p id="countdown">残り秒数: -</p>
-  <p id="nextTime">90秒後の時刻: -</p>
-  <div id="history"></div>
-
-  <!-- 音声ファイルの読み込み -->
-  <audio id="thirtySecSound" src="30seconds.mp3" preload="auto"></audio>
-  <audio id="launchSound" src="launch.mp3" preload="auto"></audio>
-
-  <script>
-    let count = 0;
-    let timer;
-    let startTime;
-    let thirtySecPlayed = false;
-
-    function startTimer() {
-      clearInterval(timer);
-      count++;
-      thirtySecPlayed = false;
-      startTime = new Date();
-      const future = new Date(startTime.getTime() + 90000);
-      document.getElementById("nextTime").textContent = "90秒後の時刻: " + future.toLocaleTimeString();
-
-      // iOS対策：音声を事前に読み込み（音は鳴らさない）
-      try {
-        document.getElementById("thirtySecSound").load();
-        document.getElementById("launchSound").load();
-      } catch (e) {}
-
-      timer = setInterval(() => {
-        const now = new Date();
-        const elapsed = Math.floor((now - startTime) / 1000);
-        const remaining = 90 - elapsed;
-        document.getElementById("countdown").textContent = "残り秒数: " + remaining + " 秒";
-
-        // 30秒前に音声再生（1回だけ）
-        if (remaining === 30 && !thirtySecPlayed) {
-          document.getElementById("thirtySecSound").play();
-          thirtySecPlayed = true;
-        }
-
-        // 0秒になったら発射音＋履歴追加
-        if (remaining <= 0) {
-          clearInterval(timer);
-          document.getElementById("launchSound").play();
-
-          const log = `${count}回目、90秒経過しました！ [${now.toLocaleTimeString()}]`;
-          const entry = document.createElement("div");
-          entry.textContent = log;
-          document.getElementById("history").appendChild(entry);
-
-          startTimer(); // 自動再スタート
-        }
-      }, 1000);
-    }
-
-    function clearHistory() {
-      document.getElementById("history").innerHTML = "";
-      count = 0;
-    }
-  </script>
+  <h1>タイマーを選んでください</h1>
+  <a href="timer.html">⏱ 通常タイマー</a>
+  <a href="kogebot.html">🤖 ろぼっとこげちゃん</a>
 </body>
 </html>
