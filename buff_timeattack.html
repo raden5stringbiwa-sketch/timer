@@ -15,7 +15,12 @@
     #container {
       position: relative;
       width: 800px;
-      margin: 20px auto;
+      margin: 0 auto;
+    }
+    #buff-img {
+      width: 100%;
+      display: none;
+      border: 2px solid #666;
     }
     .tap-btn {
       position: absolute;
@@ -29,13 +34,14 @@
       cursor: pointer;
       display: none;
     }
-    #fort-btn { top: 100px; left: 150px; }
-    #assemble-btn { top: 200px; left: 300px; }
-    #btn1 { top: 300px; left: 100px; }
-    #btn2 { top: 300px; left: 250px; }
-    #btn3 { top: 300px; left: 400px; }
-    #btn4 { top: 300px; left: 550px; }
+    #fort-btn { top: 250px; left: 360px; }       /* 中央 */
+    #assemble-btn { top: 180px; left: 420px; }   /* 右上 */
+    #btn1 { top: 80px; left: 100px; }            /* 「2」の部分 */
+    #btn2 { top: 300px; left: 620px; }           /* チェックボックス下 */
+    #btn3 { top: 420px; left: 180px; }           /* 軍団肆の位置 */
+    #btn4 { top: 520px; left: 620px; }           /* 集結発起の位置 */
     #start {
+      margin-bottom: 20px;
       padding: 10px 20px;
       font-size: 1.2em;
       background: #2196f3;
@@ -48,12 +54,6 @@
       margin-top: 20px;
       font-size: 1.4em;
     }
-    #buff-img {
-      margin-top: 20px;
-      max-width: 800px;
-      display: none;
-      border: 2px solid #666;
-    }
   </style>
 </head>
 <body>
@@ -61,6 +61,7 @@
 <h1>砦→集結→画像→①〜④タップ</h1>
 <button id="start">スタート</button>
 <div id="container">
+  <img id="buff-img" src="buff_2.jpg" alt="バフ画像">
   <button class="tap-btn" id="fort-btn">砦</button>
   <button class="tap-btn" id="assemble-btn">集結</button>
   <button class="tap-btn" id="btn1">①</button>
@@ -68,7 +69,6 @@
   <button class="tap-btn" id="btn3">③</button>
   <button class="tap-btn" id="btn4">④</button>
 </div>
-<img id="buff-img" src="buff_2.jpg" alt="バフ画像">
 <p id="message">スタートを押してね</p>
 
 <script>
@@ -98,7 +98,7 @@ document.getElementById("fort-btn").addEventListener("click", () => {
 
 document.getElementById("assemble-btn").addEventListener("click", () => {
   document.getElementById("assemble-btn").style.display = "none";
-  document.getElementById("buff-img").style.display = "block"; // ← 画像表示
+  document.getElementById("buff-img").style.display = "block"; // 画像表示
   tapSequence.forEach(id => {
     document.getElementById(id).style.display = "block";
   });
