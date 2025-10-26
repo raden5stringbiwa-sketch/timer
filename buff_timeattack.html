@@ -39,14 +39,11 @@
       font-size: 1.2em;
       color: white;
       cursor: pointer;
-      display: none;
-      transition: opacity 0.1s ease;
+      transition: background 0.1s ease;
     }
 
-    .tap-btn.hidden {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
+    .tap-btn.pressed {
+      background: rgba(0, 255, 0, 0.5);
     }
 
     #fort-btn {
@@ -56,6 +53,7 @@
       top: 60%;
       left: 50%;
       transform: translate(-50%, -50%);
+      display: none;
     }
 
     #assemble-btn {
@@ -64,6 +62,7 @@
       border-radius: 8px;
       top: 40%;
       left: 60%;
+      display: none;
     }
 
     #btn1 {
@@ -72,6 +71,7 @@
       border-radius: 8px;
       top: 10%;
       left: 12%;
+      display: none;
     }
 
     #btn2 {
@@ -80,6 +80,7 @@
       border-radius: 6px;
       top: 52%;
       left: 78%;
+      display: none;
     }
 
     #btn3 {
@@ -88,6 +89,7 @@
       border-radius: 8px;
       top: 70%;
       left: 26%;
+      display: none;
     }
 
     #btn4 {
@@ -96,6 +98,7 @@
       border-radius: 8px;
       top: 85%;
       left: 74%;
+      display: none;
     }
 
     #start {
@@ -174,9 +177,8 @@ document.getElementById("assemble-btn").addEventListener("click", () => {
   document.getElementById("assemble-btn").style.display = "none";
   document.getElementById("buff-img").style.display = "block";
   tapSequence.forEach(id => {
-    const btn = document.getElementById(id);
-    btn.classList.remove("hidden");
-    btn.style.display = "block";
+    document.getElementById(id).style.display = "block";
+    document.getElementById(id).classList.remove("pressed");
   });
   document.getElementById("message").textContent = "①〜④を順番にタップしてね！";
 });
@@ -184,17 +186,13 @@ document.getElementById("assemble-btn").addEventListener("click", () => {
 tapSequence.forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
     if (id === tapSequence[currentTap]) {
-      currentTap++; // 先に更新
-      requestAnimationFrame(() => {
-        document.getElementById(id).classList.add("hidden");
-        if (currentTap === tapSequence.length) {
-          const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
-          document.getElementById("message").textContent =
-            `砦から④までの時間：${elapsed} 秒`;
-        }
-      });
-    } else {
-      document.getElementById("message").textContent = "順番が違うよ！";
+      document.getElementById(id).classList.add("pressed");
+      currentTap++;
+      if (currentTap === tapSequence.length) {
+        const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
+        document.getElementById("message").textContent =
+          `砦から④までの時間：${elapsed} 秒`;
+      }
     }
   });
 });
@@ -203,7 +201,7 @@ function hideAllButtons() {
   ["fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
     const btn = document.getElementById(id);
     btn.style.display = "none";
-    btn.classList.remove("hidden");
+    btn.classList.remove("pressed");
   });
 }
 </script>
