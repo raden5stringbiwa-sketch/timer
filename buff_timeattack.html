@@ -5,28 +5,36 @@
   <title>砦→集結→画像→①〜④タップ</title>
   <style>
     body {
+      margin: 0;
       background: #000;
       color: white;
       font-family: sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-bottom: 100px;
     }
+
     #container {
       position: relative;
-      width: 800px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20px;
     }
+
     #buff-img {
       width: 100%;
+      max-width: 800px;
       display: none;
+      margin: 0 auto;
       border: 2px solid #666;
     }
+
     .tap-btn {
       position: absolute;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+      padding: 10px 20px;
       background: rgba(255, 255, 255, 0.3);
       border: 2px solid white;
       font-size: 1.2em;
@@ -34,14 +42,40 @@
       cursor: pointer;
       display: none;
     }
-    #fort-btn { top: 250px; left: 360px; }       /* 中央 */
-    #assemble-btn { top: 180px; left: 420px; }   /* 右上 */
-    #btn1 { top: 80px; left: 100px; }            /* 「2」の部分 */
-    #btn2 { top: 300px; left: 620px; }           /* チェックボックス下 */
-    #btn3 { top: 420px; left: 180px; }           /* 軍団肆の位置 */
-    #btn4 { top: 520px; left: 620px; }           /* 集結発起の位置 */
+
+    /* 丸型は砦だけ */
+    #fort-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 長方形ボタン */
+    #assemble-btn,
+    #btn1,
+    #btn2,
+    #btn3,
+    #btn4 {
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    /* ボタン位置（画像に合わせて調整） */
+    #assemble-btn { top: 40%; left: 60%; }
+    #btn1 { top: 10%; left: 15%; }
+    #btn2 { top: 55%; left: 78%; }
+    #btn3 { top: 70%; left: 22%; }
+    #btn4 { top: 85%; left: 78%; }
+
     #start {
-      margin-bottom: 20px;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       padding: 10px 20px;
       font-size: 1.2em;
       background: #2196f3;
@@ -49,17 +83,31 @@
       border-radius: 10px;
       color: white;
       cursor: pointer;
+      z-index: 10;
     }
+
     #message {
       margin-top: 20px;
       font-size: 1.4em;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .tap-btn {
+        font-size: 1em;
+        width: 100px;
+        height: 35px;
+      }
+      #fort-btn {
+        width: 70px;
+        height: 70px;
+      }
     }
   </style>
 </head>
 <body>
 
 <h1>砦→集結→画像→①〜④タップ</h1>
-<button id="start">スタート</button>
 <div id="container">
   <img id="buff-img" src="buff_2.jpg" alt="バフ画像">
   <button class="tap-btn" id="fort-btn">砦</button>
@@ -70,6 +118,7 @@
   <button class="tap-btn" id="btn4">④</button>
 </div>
 <p id="message">スタートを押してね</p>
+<button id="start">スタート</button>
 
 <script>
 let fortStartTime = 0;
@@ -98,7 +147,7 @@ document.getElementById("fort-btn").addEventListener("click", () => {
 
 document.getElementById("assemble-btn").addEventListener("click", () => {
   document.getElementById("assemble-btn").style.display = "none";
-  document.getElementById("buff-img").style.display = "block"; // 画像表示
+  document.getElementById("buff-img").style.display = "block";
   tapSequence.forEach(id => {
     document.getElementById(id).style.display = "block";
   });
