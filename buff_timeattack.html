@@ -34,7 +34,6 @@
 
     .tap-btn {
       position: absolute;
-      padding: 10px 20px;
       background: rgba(255, 255, 255, 0.3);
       border: 2px solid white;
       font-size: 1.2em;
@@ -50,7 +49,6 @@
       pointer-events: none;
     }
 
-    /* 丸型は砦だけ */
     #fort-btn {
       width: 80px;
       height: 80px;
@@ -60,19 +58,10 @@
       transform: translate(-50%, -50%);
     }
 
-    /* 長方形ボタン */
-    #assemble-btn,
-    #btn1,
-    #btn2,
-    #btn3,
-    #btn4 {
-      border-radius: 8px;
-    }
-
-    /* ボタン位置とサイズ調整 */
     #assemble-btn {
       width: 120px;
       height: 40px;
+      border-radius: 8px;
       top: 40%;
       left: 60%;
     }
@@ -80,6 +69,7 @@
     #btn1 {
       width: 100px;
       height: 35px;
+      border-radius: 8px;
       top: 10%;
       left: 12%;
     }
@@ -95,6 +85,7 @@
     #btn3 {
       width: 100px;
       height: 35px;
+      border-radius: 8px;
       top: 70%;
       left: 26%;
     }
@@ -102,6 +93,7 @@
     #btn4 {
       width: 100px;
       height: 35px;
+      border-radius: 8px;
       top: 85%;
       left: 74%;
     }
@@ -164,7 +156,7 @@ document.getElementById("start").addEventListener("click", () => {
   document.getElementById("buff-img").style.display = "none";
   currentTap = 0;
 
-  const delay = Math.random() * 1000 + 1000; // 1〜2秒
+  const delay = Math.random() * 1000 + 1000;
   setTimeout(() => {
     document.getElementById("fort-btn").style.display = "block";
     fortStartTime = Date.now();
@@ -190,10 +182,9 @@ document.getElementById("assemble-btn").addEventListener("click", () => {
 });
 
 tapSequence.forEach(id => {
-tapSequence.forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
     if (id === tapSequence[currentTap]) {
-      currentTap++; // ← 先に更新することで次のボタンがすぐ反応する
+      currentTap++; // 先に更新
       requestAnimationFrame(() => {
         document.getElementById(id).classList.add("hidden");
         if (currentTap === tapSequence.length) {
@@ -207,7 +198,6 @@ tapSequence.forEach(id => {
     }
   });
 });
-
 
 function hideAllButtons() {
   ["fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
