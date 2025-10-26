@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>砦→集結→①〜④タップ</title>
+  <title>砦→集結→画像→①〜④タップ</title>
   <style>
     body {
       background: #000;
@@ -48,11 +48,17 @@
       margin-top: 20px;
       font-size: 1.4em;
     }
+    #buff-img {
+      margin-top: 20px;
+      max-width: 800px;
+      display: none;
+      border: 2px solid #666;
+    }
   </style>
 </head>
 <body>
 
-<h1>砦→集結→①〜④タップ</h1>
+<h1>砦→集結→画像→①〜④タップ</h1>
 <button id="start">スタート</button>
 <div id="container">
   <button class="tap-btn" id="fort-btn">砦</button>
@@ -62,16 +68,18 @@
   <button class="tap-btn" id="btn3">③</button>
   <button class="tap-btn" id="btn4">④</button>
 </div>
+<img id="buff-img" src="buff_2.jpg" alt="バフ画像">
 <p id="message">スタートを押してね</p>
 
 <script>
 let fortStartTime = 0;
-let tapSequence = ["btn1", "btn2", "btn3", "btn4"];
 let currentTap = 0;
+const tapSequence = ["btn1", "btn2", "btn3", "btn4"];
 
 document.getElementById("start").addEventListener("click", () => {
   document.getElementById("message").textContent = "砦が出るまで待ってね…";
   hideAllButtons();
+  document.getElementById("buff-img").style.display = "none";
   currentTap = 0;
 
   const delay = Math.random() * 2000 + 3000; // 3〜5秒
@@ -90,6 +98,7 @@ document.getElementById("fort-btn").addEventListener("click", () => {
 
 document.getElementById("assemble-btn").addEventListener("click", () => {
   document.getElementById("assemble-btn").style.display = "none";
+  document.getElementById("buff-img").style.display = "block"; // ← 画像表示
   tapSequence.forEach(id => {
     document.getElementById(id).style.display = "block";
   });
