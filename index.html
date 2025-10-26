@@ -2,45 +2,131 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>タイマー選択ページ</title>
+  <title>砦→集結→画像→①〜④タップ</title>
   <style>
     body {
-      background-color: #111;
-      color: #eee;
-      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: white;
+      font-family: sans-serif;
       text-align: center;
-      padding: 50px;
+      margin: 0;
+      padding: 20px;
     }
-
-    h1 {
-      font-size: 40px;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-      margin-bottom: 40px;
+    #container {
+      position: relative;
+      width: 800px;
+      margin: 0 auto;
     }
-
-    a {
-      display: block;
-      margin: 20px auto;
-      padding: 15px 30px;
-      font-size: 20px;
-      color: #111;
-      background-color: #00ffcc;
-      text-decoration: none;
-      border-radius: 8px;
-      width: 250px;
-      transition: 0.3s;
+    #buff-img {
+      width: 100%;
+      display: none;
+      border: 2px solid #666;
     }
-
-    a:hover {
-      background-color: #00ccaa;
+    .tap-btn {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      border: 2px solid white;
+      font-size: 1.2em;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+    #fort-btn { top: 250px; left: 360px; }       /* 中央 */
+    #assemble-btn { top: 180px; left: 420px; }   /* 右上 */
+    #btn1 { top: 80px; left: 100px; }            /* 「2」の部分 */
+    #btn2 { top: 300px; left: 620px; }           /* チェックボックス下 */
+    #btn3 { top: 420px; left: 180px; }           /* 軍団肆の位置 */
+    #btn4 { top: 520px; left: 620px; }           /* 集結発起の位置 */
+    #start {
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background: #2196f3;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.4em;
     }
   </style>
 </head>
 <body>
-  <h1>タイマーを選んでください</h1>
-  <a href="timer.html">🏹　焙烙用タイマー</a>
-  <a href="kogebot.html">🤖 ロボットこげちゃん</a>
-  <a href="buff_timeattack.html">🛡️ バフ砦練習タイムアタック（作成中・・・）</a>
+
+<h1>砦→集結→画像→①〜④タップ</h1>
+<button id="start">スタート</button>
+<div id="container">
+  <img id="buff-img" src="buff_2.jpg" alt="バフ画像">
+  <button class="tap-btn" id="fort-btn">砦</button>
+  <button class="tap-btn" id="assemble-btn">集結</button>
+  <button class="tap-btn" id="btn1">①</button>
+  <button class="tap-btn" id="btn2">②</button>
+  <button class="tap-btn" id="btn3">③</button>
+  <button class="tap-btn" id="btn4">④</button>
+</div>
+<p id="message">スタートを押してね</p>
+
+<script>
+let fortStartTime = 0;
+let currentTap = 0;
+const tapSequence = ["btn1", "btn2", "btn3", "btn4"];
+
+document.getElementById("start").addEventListener("click", () => {
+  document.getElementById("message").textContent = "砦が出るまで待ってね…";
+  hideAllButtons();
+  document.getElementById("buff-img").style.display = "none";
+  currentTap = 0;
+
+  const delay = Math.random() * 2000 + 3000; // 3〜5秒
+  setTimeout(() => {
+    document.getElementById("fort-btn").style.display = "block";
+    fortStartTime = Date.now();
+    document.getElementById("message").textContent = "砦をタップしてね！";
+  }, delay);
+});
+
+document.getElementById("fort-btn").addEventListener("click", () => {
+  document.getElementById("fort-btn").style.display = "none";
+  document.getElementById("assemble-btn").style.display = "block";
+  document.getElementById("message").textContent = "集結をタップしてね！";
+});
+
+document.getElementById("assemble-btn").addEventListener("click", () => {
+  document.getElementById("assemble-btn").style.display = "none";
+  document.getElementById("buff-img").style.display = "block"; // 画像表示
+  tapSequence.forEach(id => {
+    document.getElementById(id).style.display = "block";
+  });
+  document.getElementById("message").textContent = "①〜④を順番にタップしてね！";
+});
+
+tapSequence.forEach(id => {
+  document.getElementById(id).addEventListener("click", () => {
+    if (id === tapSequence[currentTap]) {
+      document.getElementById(id).style.display = "none";
+      currentTap++;
+      if (currentTap === tapSequence.length) {
+        const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
+        document.getElementById("message").textContent =
+          `砦から④までの時間：${elapsed} 秒`;
+      }
+    } else {
+      document.getElementById("message").textContent = "順番が違うよ！";
+    }
+  });
+});
+
+function hideAllButtons() {
+  ["fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
+}
+</script>
+
 </body>
 </html>
