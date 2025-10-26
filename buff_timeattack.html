@@ -190,11 +190,12 @@ document.getElementById("assemble-btn").addEventListener("click", () => {
 });
 
 tapSequence.forEach(id => {
+tapSequence.forEach(id => {
   document.getElementById(id).addEventListener("click", () => {
     if (id === tapSequence[currentTap]) {
+      currentTap++; // ← 先に更新することで次のボタンがすぐ反応する
       requestAnimationFrame(() => {
         document.getElementById(id).classList.add("hidden");
-        currentTap++;
         if (currentTap === tapSequence.length) {
           const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
           document.getElementById("message").textContent =
@@ -206,6 +207,7 @@ tapSequence.forEach(id => {
     }
   });
 });
+
 
 function hideAllButtons() {
   ["fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
