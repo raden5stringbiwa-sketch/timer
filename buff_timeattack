@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>反応速度6ステップ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      padding: 30px;
+    }
+    h1 { font-size: 1.4em; }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    button {
+      font-size: 1.4em;
+      padding: 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ccc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button.active { background: #4caf50; color: white; }
+    button.done { background: #999; color: white; cursor: default; }
+    #start {
+      background: #2196f3;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      border: none;
+    }
+    #message { margin-top: 20px; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+
+<h1>①～④を順番にタップ！</h1>
+<button id="start">スタート</button>
+<div id="game"></div>
+<p id="message">スタートを押してね</p>
+
+<script>
+const sequence = ["①", "②", "③", "④", "③", "②"]; // 6ステップ
+let currentStep = 0;
+let startTime;
+let endTime;
+
+document.getElementById("start").addEventListener("click", () => {
+  const game = document.getElementById("game");
+  const message = document.getElementById("message");
+  game.innerHTML = "";
+  currentStep = 0;
+  message.textContent = "順番にタップしてね！";
+
+  const labels = ["①", "②", "③", "④"];
+  labels.forEach(label => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    btn.id = `btn-${label}`;
+    btn.addEventListener("click", () => handleTap(label));
+    game.appendChild(btn);
+  });
+
+  highlightNext();
+  startTime = Date.now();
+});
+
+function handleTap(label) {
+  if (label === sequence[currentStep]) {
+    document.getElementById(`btn-${label}`).classList.add("done");
+    currentStep++;
+    if (currentStep < sequence.length) {
+      highlightNext();
+    } else {
+      endTime = Date.now();
+      const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+      document.getElementById("message").textContent = `あなたの記録は ${totalTime} 秒です！`;
+      clearHighlights();
+    }
+  } else {
+    document.getElementById("message").textContent = "順番が違うよ！";
+  }
+}
+
+function highlightNext() {
+  clearHighlights();
+  const next = sequence[currentStep];
+  const btn = document.getElementById(`btn-${next}`);
+  if (btn) btn.classList.add("active");
+}
+
+function clearHighlights() {
+  ["①", "②", "③", "④"].forEach(label => {
+    const btn = document.getElementById(`btn-${label}`);
+    if (btn) btn.classList.remove("active");
+  });
+}
+</script>
+
+</body>
+</html>
