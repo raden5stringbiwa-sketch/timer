@@ -2,107 +2,125 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>反応速度6ステップ</title>
+  <title>反応速度テスト（画像上タップ）</title>
   <style>
     body {
+      margin: 0;
+      background: #000;
       font-family: sans-serif;
       text-align: center;
-      background: #f0f0f0;
-      padding: 30px;
-    }
-    h1 { font-size: 1.4em; }
-    #game {
-      display: grid;
-      grid-template-columns: repeat(3, 120px);
-      gap: 15px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    button {
-      font-size: 1.4em;
-      padding: 20px;
-      border-radius: 10px;
-      border: none;
-      background: #ccc;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button.active { background: #4caf50; color: white; }
-    button.done { background: #999; color: white; cursor: default; }
-    #start {
-      background: #2196f3;
       color: white;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: 1.5em;
+    }
+    #container {
+      position: relative;
+      width: 800px; /* 画像サイズに合わせて調整 */
+      margin: 20px auto;
+    }
+    #bg {
+      width: 100%;
+      display: block;
+      border: 2px solid #444;
+    }
+    .tap-btn {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      border: 2px solid white;
+      font-size: 1.2em;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+    .active {
+      background: rgba(76, 175, 80, 0.8);
+      border-color: lime;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.4em;
+    }
+    #start {
+      margin-top: 10px;
       padding: 10px 20px;
       font-size: 1.2em;
-      border-radius: 10px;
+      background: #2196f3;
       border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
     }
-    #message { margin-top: 20px; font-size: 1.2em; }
   </style>
 </head>
 <body>
 
-<h1>①～④を順番にタップ！</h1>
+<h1>画像上の①～④を順番にタップ！</h1>
 <button id="start">スタート</button>
-<div id="game"></div>
+<div id="container">
+  <img id="bg" src="buff_2.jpg" alt="ゲーム画面">
+  <!-- 位置は画像に合わせて調整してください -->
+  <button class="tap-btn" id="btn1" style="top: 100px; left: 150px;">①</button>
+  <button class="tap-btn" id="btn2" style="top: 200px; left: 300px;">②</button>
+  <button class="tap-btn" id="btn3" style="top: 300px; left: 200px;">③</button>
+  <button class="tap-btn" id="btn4" style="top: 400px; left: 350px;">④</button>
+</div>
 <p id="message">スタートを押してね</p>
 
 <script>
-const sequence = ["①", "②", "③", "④", "③", "②"]; // 6ステップ
-let currentStep = 0;
+const sequence = ["btn1", "btn2", "btn3", "btn4", "btn3", "btn2"];
+let current = 0;
 let startTime;
-let endTime;
+let revealTime;
 
 document.getElementById("start").addEventListener("click", () => {
-  const game = document.getElementById("game");
-  const message = document.getElementById("message");
-  game.innerHTML = "";
-  currentStep = 0;
-  message.textContent = "順番にタップしてね！";
-
-  const labels = ["①", "②", "③", "④"];
-  labels.forEach(label => {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.id = `btn-${label}`;
-    btn.addEventListener("click", () => handleTap(label));
-    game.appendChild(btn);
+  current = 0;
+  document.getElementById("message").textContent = "砦が出るまで待ってね…";
+  document.querySelectorAll(".tap-btn").forEach(btn => {
+    btn.style.display = "none";
+    btn.classList.remove("active");
   });
 
-  highlightNext();
-  startTime = Date.now();
+  const delay = Math.random() * 2000 + 3000; // 3〜5秒
+  setTimeout(() => {
+    startTime = Date.now(); // 実際のタップ開始時間
+    revealTime = delay;
+    document.querySelectorAll(".tap-btn").forEach(btn => btn.style.display = "block");
+    highlightNext();
+    document.getElementById("message").textContent = "順番にタップしてね！";
+  }, delay);
 });
 
-function handleTap(label) {
-  if (label === sequence[currentStep]) {
-    document.getElementById(`btn-${label}`).classList.add("done");
-    currentStep++;
-    if (currentStep < sequence.length) {
-      highlightNext();
-    } else {
-      endTime = Date.now();
-      const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-      document.getElementById("message").textContent = `あなたの記録は ${totalTime} 秒です！`;
-      clearHighlights();
-    }
-  } else {
-    document.getElementById("message").textContent = "順番が違うよ！";
-  }
-}
-
 function highlightNext() {
-  clearHighlights();
-  const next = sequence[currentStep];
-  const btn = document.getElementById(`btn-${next}`);
-  if (btn) btn.classList.add("active");
+  document.querySelectorAll(".tap-btn").forEach(btn => btn.classList.remove("active"));
+  const nextId = sequence[current];
+  const nextBtn = document.getElementById(nextId);
+  if (nextBtn) nextBtn.classList.add("active");
 }
 
-function clearHighlights() {
-  ["①", "②", "③", "④"].forEach(label => {
-    const btn = document.getElementById(`btn-${label}`);
-    if (btn) btn.classList.remove("active");
+document.querySelectorAll(".tap-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (btn.id === sequence[current]) {
+      btn.classList.remove("active");
+      current++;
+      if (current < sequence.length) {
+        highlightNext();
+      } else {
+        const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+        const waitTime = (revealTime / 1000).toFixed(2);
+        document.getElementById("message").textContent =
+          `あなたの記録は ${totalTime} 秒（待機時間 ${waitTime} 秒）です！`;
+        document.querySelectorAll(".tap-btn").forEach(b => b.style.display = "none");
+      }
+    } else {
+      document.getElementById("message").textContent = "順番が違うよ！";
+    }
   });
-}
+});
 </script>
 
 </body>
