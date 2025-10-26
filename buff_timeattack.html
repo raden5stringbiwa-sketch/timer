@@ -2,22 +2,19 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>反応速度テスト（画像上タップ）</title>
+  <title>砦→集結→画像表示ゲーム</title>
   <style>
     body {
-      margin: 0;
       background: #000;
+      color: white;
       font-family: sans-serif;
       text-align: center;
-      color: white;
-    }
-    h1 {
-      margin-top: 20px;
-      font-size: 1.5em;
+      margin: 0;
+      padding: 20px;
     }
     #container {
       position: relative;
-      width: 800px; /* 画像サイズに合わせて調整 */
+      width: 800px;
       margin: 20px auto;
     }
     #bg {
@@ -27,8 +24,8 @@
     }
     .tap-btn {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.3);
       border: 2px solid white;
@@ -37,16 +34,9 @@
       cursor: pointer;
       display: none;
     }
-    .active {
-      background: rgba(76, 175, 80, 0.8);
-      border-color: lime;
-    }
-    #message {
-      margin-top: 20px;
-      font-size: 1.4em;
-    }
+    #fort-btn { top: 150px; left: 200px; }
+    #assemble-btn { top: 300px; left: 400px; }
     #start {
-      margin-top: 10px;
       padding: 10px 20px;
       font-size: 1.2em;
       background: #2196f3;
@@ -55,71 +45,58 @@
       color: white;
       cursor: pointer;
     }
+    #message {
+      margin-top: 20px;
+      font-size: 1.4em;
+    }
+    #buff-img {
+      margin-top: 20px;
+      display: none;
+      max-width: 800px;
+      border: 2px solid #666;
+    }
   </style>
 </head>
 <body>
 
-<h1>画像上の①～④を順番にタップ！</h1>
+<h1>砦→集結→画像表示ゲーム</h1>
 <button id="start">スタート</button>
 <div id="container">
-  <img id="bg" src="buff_2.jpg" alt="ゲーム画面">
-  <!-- 位置は画像に合わせて調整してください -->
-  <button class="tap-btn" id="btn1" style="top: 100px; left: 150px;">①</button>
-  <button class="tap-btn" id="btn2" style="top: 200px; left: 300px;">②</button>
-  <button class="tap-btn" id="btn3" style="top: 300px; left: 200px;">③</button>
-  <button class="tap-btn" id="btn4" style="top: 400px; left: 350px;">④</button>
+  <img id="bg" src="buff_2.jpg" alt="背景画像">
+  <button class="tap-btn" id="fort-btn">砦</button>
+  <button class="tap-btn" id="assemble-btn">集結</button>
 </div>
+<img id="buff-img" src="buff_2.jpg" alt="バフ画像">
 <p id="message">スタートを押してね</p>
 
 <script>
-const sequence = ["btn1", "btn2", "btn3", "btn4", "btn3", "btn2"];
-let current = 0;
-let startTime;
-let revealTime;
+let fortShownTime = 0;
 
 document.getElementById("start").addEventListener("click", () => {
-  current = 0;
   document.getElementById("message").textContent = "砦が出るまで待ってね…";
-  document.querySelectorAll(".tap-btn").forEach(btn => {
-    btn.style.display = "none";
-    btn.classList.remove("active");
-  });
+  document.getElementById("fort-btn").style.display = "none";
+  document.getElementById("assemble-btn").style.display = "none";
+  document.getElementById("buff-img").style.display = "none";
 
   const delay = Math.random() * 2000 + 3000; // 3〜5秒
   setTimeout(() => {
-    startTime = Date.now(); // 実際のタップ開始時間
-    revealTime = delay;
-    document.querySelectorAll(".tap-btn").forEach(btn => btn.style.display = "block");
-    highlightNext();
-    document.getElementById("message").textContent = "順番にタップしてね！";
+    document.getElementById("fort-btn").style.display = "block";
+    fortShownTime = Date.now();
+    document.getElementById("message").textContent = "砦をタップしてね！";
   }, delay);
 });
 
-function highlightNext() {
-  document.querySelectorAll(".tap-btn").forEach(btn => btn.classList.remove("active"));
-  const nextId = sequence[current];
-  const nextBtn = document.getElementById(nextId);
-  if (nextBtn) nextBtn.classList.add("active");
-}
+document.getElementById("fort-btn").addEventListener("click", () => {
+  document.getElementById("fort-btn").style.display = "none";
+  document.getElementById("assemble-btn").style.display = "block";
+  document.getElementById("message").textContent = "集結をタップしてね！";
+});
 
-document.querySelectorAll(".tap-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    if (btn.id === sequence[current]) {
-      btn.classList.remove("active");
-      current++;
-      if (current < sequence.length) {
-        highlightNext();
-      } else {
-        const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
-        const waitTime = (revealTime / 1000).toFixed(2);
-        document.getElementById("message").textContent =
-          `あなたの記録は ${totalTime} 秒（待機時間 ${waitTime} 秒）です！`;
-        document.querySelectorAll(".tap-btn").forEach(b => b.style.display = "none");
-      }
-    } else {
-      document.getElementById("message").textContent = "順番が違うよ！";
-    }
-  });
+document.getElementById("assemble-btn").addEventListener("click", () => {
+  const elapsed = ((Date.now() - fortShownTime) / 1000).toFixed(2);
+  document.getElementById("assemble-btn").style.display = "none";
+  document.getElementById("buff-img").style.display = "block";
+  document.getElementById("message").textContent = `砦から集結までの時間：${elapsed} 秒`;
 });
 </script>
 
