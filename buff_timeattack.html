@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>反応速度テスト（高速連打対応版）</title>
+  <title>反応速度テスト（pointerdown対応）</title>
   <style>
     body {
       margin: 0;
@@ -126,7 +126,7 @@
 </head>
 <body>
 
-<h1>反応速度テスト（高速連打対応版）</h1>
+<h1>反応速度テスト（pointerdown対応）</h1>
 <div id="container">
   <img id="buff-img" src="buff_2.jpg" alt="バフ画像">
   <button class="tap-btn" id="fort-btn">砦</button>
@@ -146,7 +146,7 @@ const tapSequence = ["btn1", "btn2", "btn3", "btn4"];
 const preloadImg = new Image();
 preloadImg.src = "buff_2.jpg"; // 事前読み込み
 
-document.getElementById("start").addEventListener("click", () => {
+document.getElementById("start").addEventListener("pointerdown", () => {
   document.getElementById("message").textContent = "";
   currentTap = 0;
   document.getElementById("buff-img").style.display = "none";
@@ -161,12 +161,12 @@ document.getElementById("start").addEventListener("click", () => {
   }, delay);
 });
 
-document.getElementById("fort-btn").addEventListener("click", () => {
+document.getElementById("fort-btn").addEventListener("pointerdown", () => {
   document.getElementById("fort-btn").style.display = "none";
   document.getElementById("assemble-btn").style.display = "block";
 });
 
-document.getElementById("assemble-btn").addEventListener("click", () => {
+document.getElementById("assemble-btn").addEventListener("pointerdown", () => {
   document.getElementById("assemble-btn").style.display = "none";
   document.getElementById("buff-img").style.display = "block";
   tapSequence.forEach(id => {
@@ -176,8 +176,8 @@ document.getElementById("assemble-btn").addEventListener("click", () => {
 
 tapSequence.forEach(id => {
   const btn = document.getElementById(id);
-  btn.addEventListener("click", () => {
-    if (id !== tapSequence[currentTap]) return; // 順番違いは無視
+  btn.addEventListener("pointerdown", () => {
+    if (id !== tapSequence[currentTap]) return;
     currentTap++;
     if (currentTap === tapSequence.length) {
       const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
