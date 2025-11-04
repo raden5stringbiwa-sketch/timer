@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>反応速度テスト（pointerdown対応）</title>
+  <title>🏰バフ砦練習用</title>
   <style>
     body {
       margin: 0;
@@ -24,12 +24,12 @@
       margin-top: 20px;
     }
 
-    #buff-img {
+    #buff-img1, #buff-img2 {
       width: 100%;
       max-width: 600px;
-      display: none;
       margin: 0 auto;
       border: 2px solid #666;
+      display: none;
     }
 
     .tap-btn {
@@ -39,14 +39,19 @@
       font-size: 1.2em;
       color: white;
       cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .tap-btn.pressed {
+      transform: scale(0.9);
     }
 
     #fort-btn {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      top: 60%;
-      left: 50%;
+      top: 75%;
+      left: 48%;
       transform: translate(-50%, -50%);
       display: none;
     }
@@ -126,9 +131,10 @@
 </head>
 <body>
 
-<h1>反応速度テスト（pointerdown対応）</h1>
+<h1>🏰バフ砦練習用</h1>
 <div id="container">
-  <img id="buff-img" src="buff_2.jpg" alt="バフ画像">
+  <img id="buff-img1" src="buff_1.jpg" alt="バフ1">
+  <img id="buff-img2" src="buff_2.jpg" alt="バフ2">
   <button class="tap-btn" id="fort-btn">砦</button>
   <button class="tap-btn" id="assemble-btn">集結</button>
   <button class="tap-btn" id="btn1">①</button>
@@ -143,20 +149,22 @@
 let fortStartTime = 0;
 let currentTap = 0;
 const tapSequence = ["btn1", "btn2", "btn3", "btn4"];
-const preloadImg = new Image();
-preloadImg.src = "buff_2.jpg"; // 事前読み込み
+const preload1 = new Image();
+const preload2 = new Image();
+preload1.src = "buff_1.jpg";
+preload2.src = "buff_2.jpg";
 
 document.getElementById("start").addEventListener("pointerdown", () => {
   document.getElementById("message").textContent = "";
   currentTap = 0;
-  document.getElementById("buff-img").style.display = "none";
-  ["fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
+  ["buff-img1", "buff-img2", "fort-btn", "assemble-btn", ...tapSequence].forEach(id => {
     document.getElementById(id).style.display = "none";
   });
 
   const delay = Math.random() * 1000 + 1000;
   setTimeout(() => {
     document.getElementById("fort-btn").style.display = "block";
+    document.getElementById("buff-img1").style.display = "block";
     fortStartTime = Date.now();
   }, delay);
 });
@@ -168,7 +176,8 @@ document.getElementById("fort-btn").addEventListener("pointerdown", () => {
 
 document.getElementById("assemble-btn").addEventListener("pointerdown", () => {
   document.getElementById("assemble-btn").style.display = "none";
-  document.getElementById("buff-img").style.display = "block";
+  document.getElementById("buff-img1").style.display = "none";
+  document.getElementById("buff-img2").style.display = "block";
   tapSequence.forEach(id => {
     document.getElementById(id).style.display = "block";
   });
@@ -178,6 +187,8 @@ tapSequence.forEach(id => {
   const btn = document.getElementById(id);
   btn.addEventListener("pointerdown", () => {
     if (id !== tapSequence[currentTap]) return;
+    btn.classList.add("pressed");
+    setTimeout(() => btn.classList.remove("pressed"), 100);
     currentTap++;
     if (currentTap === tapSequence.length) {
       const elapsed = ((Date.now() - fortStartTime) / 1000).toFixed(2);
