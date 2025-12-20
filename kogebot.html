@@ -144,20 +144,19 @@
 
       3358: { id: "custom242",     label: "残り242秒前" }
     };
+async function startTimer() {
+  clearInterval(timer);
+  playedEvents.clear();
+  startTime = new Date();
 
-    function startTimer() {
-      clearInterval(timer);
-      playedEvents.clear();
-      startTime = new Date();
+  const future = new Date(startTime.getTime() + totalSeconds * 1000);
+  document.getElementById("nextTime").textContent =
+    "60分後の時刻: " + future.toLocaleTimeString();
+  document.getElementById("history").innerHTML = "";
 
-      const future = new Date(startTime.getTime() + totalSeconds * 1000);
-      document.getElementById("nextTime").textContent =
-        "60分後の時刻: " + future.toLocaleTimeString();
-      document.getElementById("history").innerHTML = "";
-
-      // ✅ AudioContext（音量ブースト用）をユーザー操作内で作成
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      audioCtx.resume();
+  // ✅ AudioContext（音量ブースト用）をユーザー操作内で作成
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  await audioCtx.resume();  
 
       // ✅ 正しい boostAudio 関数（1.5倍ブースト）
       function boostAudio(audioElement, gainValue = 1.5) {
