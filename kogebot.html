@@ -60,97 +60,125 @@
   <div id="history"></div>
 
   <!-- 音声ファイル定義 -->
-  <audio id="buff90" src="buff_90sec.mp3" pr🏔eload="auto"></audio>
-  <audio id="buff30" src="buff_30sec.mp3" preload="auto"></audio>
-  <audio id="buffSpawn" src="buff_spawn.mp3" preload="auto"></audio>
-  <audio id="tower1min" src="tower_1min.mp3" preload="auto"></audio>
-  <audio id="towerStart" src="tower_start.mp3" preload="auto"></audio>
-  <audio id="point1min" src="point_1min.mp3" preload="auto"></audio>
-  <audio id="pointSpawn" src="point_spawn.mp3" preload="auto"></audio>
-  <audio id="castle1min" src="castle_1min.mp3" preload="auto"></audio>
-  <audio id="castleStart" src="castle_start.mp3" preload="auto"></audio>
-  <audio id="center1min" src="center_1min.mp3" preload="auto"></audio>
-  <audio id="centerStart" src="center_start.mp3" preload="auto"></audio>
-  <audio id="endSound" src="end.mp3" preload="auto"></audio>
+  <audio id="buff90"        src="buff_90sec.mp3"    preload="auto"></audio>
+  <audio id="buff30"        src="buff_30sec.mp3"    preload="auto"></audio>
+  <audio id="buffSpawn"     src="buff_spawn.mp3"    preload="auto"></audio>
+
+  <audio id="tower1min"     src="tower_1min.mp3"    preload="auto"></audio>
+  <audio id="towerStart"    src="tower_start.mp3"   preload="auto"></audio>
+
+  <audio id="point1min"     src="point_1min.mp3"    preload="auto"></audio>
+  <audio id="pointSpawn"    src="point_spawn.mp3"   preload="auto"></audio>
+
+  <audio id="castle1min"    src="castle_1min.mp3"   preload="auto"></audio>
+  <audio id="castleStart"   src="castle_start.mp3"  preload="auto"></audio>
+
+  <audio id="center1min"    src="center_1min.mp3"   preload="auto"></audio>
+  <audio id="centerStart"   src="center_start.mp3"  preload="auto"></audio>
+
+  <audio id="endSound"      src="end.mp3"           preload="auto"></audio>
+
   <audio id="castle14_1min" src="castle14_1min.mp3" preload="auto"></audio>
   <audio id="castle14_start" src="castle14_start.mp3" preload="auto"></audio>
-  <audio id="custom242" src="242.mp3" preload="auto"></audio>
 
+  <audio id="custom242"     src="242.mp3"           preload="auto"></audio>
 
   <script>
-  /* ✅ AudioContext（音量ブースト用） */
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  functionfunctionあfunction b(ostAudio(aud, E = 1.5) {
-    const source = audioCtx.createMediaElementSource(audioElement);
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.value = gainValue; // ← ここが音量倍率（1.5倍）
-    source.connect(gainNode).connect(audioCtx.destination);
-  }
     let timer;
     let startTime;
     const totalSeconds = 3600;
     const playedEvents = new Set();
 
+    // 時間調整済みのイベントマップ
     const eventMap = {
-      140: { id: "buff90", label: "バフ1分半前" },
-      210: { id: "buff30", label: "バフ30秒前" },
-      238: { id: "buffSpawn", label: "バフ湧くよ！" },
-      650: { id: "buff90", label: "バフ1分半前" },
-      720: { id: "buff30", label: "バフ30秒前" },
-      748: { id: "buffSpawn", label: "バフ湧くよ！" },
-      1250: { id: "buff90", label: "バフ1分半前" },
-      1320: { id: "buff30", label: "バフ30秒前" },
-      1348: { id: "buffSpawn", label: "バフ湧くよ！" },
-      1850: { id: "buff90", label: "バフ1分半前" },
-      1920: { id: "buff30", label: "バフ30秒前" },
-      1948: { id: "buffSpawn", label: "バフ湧くよ！" },
-      2450: { id: "buff90", label: "バフ1分半前" },
-      2520: { id: "buff30", label: "バフ30秒前" },
-      2548: { id: "buffSpawn", label: "バフ湧くよ！" },
-      3050: { id: "buff90", label: "バフ1分半前" },
-      3120: { id: "buff30", label: "バフ30秒前" },
-      3148: { id: "buffSpawn", label: "バフ湧くよ！" },
-      360: { id: "tower1min", label: "望楼1分前" },
-      418: { id: "towerStart", label: "望楼開始！" },
-      540: { id: "point1min", label: "1000ポイント1分前" },
-      600: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
-      1140: { id: "point1min", label: "1000ポイント1分前" },
-      1200: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
-      1740: { id: "point1min", label: "1000ポイント1分前" },
-      1800: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
-      2340: { id: "point1min", label: "1000ポイント1分前" },
-      2400: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
-      2940: { id: "point1min", label: "1000ポイント1分前" },
-      3000: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
-      840: { id: "castle1min", label: "2城・3城1分前" },
-      898: { id: "castleStart", label: "2城・3城開始！" },
-      1560: { id: "center1min", label: "中央1分前" },
-      1618: { id: "centerStart", label: "中央開始" },
-      2040: { id: "castle14_1min", label: "1・4城1分前" },
-      2098: { id: "castle14_start", label: "1・4城開始！" },
-      3358: { id: "custom242", label: "残り242秒前" },
+      140:  { id: "buff90",        label: "バフ1分半前" },
+      210:  { id: "buff30",        label: "バフ30秒前" },
+      238:  { id: "buffSpawn",     label: "バフ湧くよ！" },
 
+      650:  { id: "buff90",        label: "バフ1分半前" },
+      720:  { id: "buff30",        label: "バフ30秒前" },
+      748:  { id: "buffSpawn",     label: "バフ湧くよ！" },
+
+      1250: { id: "buff90",        label: "バフ1分半前" },
+      1320: { id: "buff30",        label: "バフ30秒前" },
+      1348: { id: "buffSpawn",     label: "バフ湧くよ！" },
+
+      1850: { id: "buff90",        label: "バフ1分半前" },
+      1920: { id: "buff30",        label: "バフ30秒前" },
+      1948: { id: "buffSpawn",     label: "バフ湧くよ！" },
+
+      2450: { id: "buff90",        label: "バフ1分半前" },
+      2520: { id: "buff30",        label: "バフ30秒前" },
+      2548: { id: "buffSpawn",     label: "バフ湧くよ！" },
+
+      3050: { id: "buff90",        label: "バフ1分半前" },
+      3120: { id: "buff30",        label: "バフ30秒前" },
+      3148: { id: "buffSpawn",     label: "バフ湧くよ！" },
+
+      360:  { id: "tower1min",     label: "望楼1分前" },
+      418:  { id: "towerStart",    label: "望楼開始！" },
+
+      540:  { id: "point1min",     label: "1000ポイント1分前" },
+      600:  { id: "pointSpawn",    label: "1000ポイント湧くよ！" },
+
+      1140: { id: "point1min",     label: "1000ポイント1分前" },
+      1200: { id: "pointSpawn",    label: "1000ポイント湧くよ！" },
+
+      1740: { id: "point1min",     label: "1000ポイント1分前" },
+      1800: { id: "pointSpawn",    label: "1000ポイント湧くよ！" },
+
+      2340: { id: "point1min",     label: "1000ポイント1分前" },
+      2400: { id: "pointSpawn",    label: "1000ポイント湧くよ！" },
+
+      2940: { id: "point1min",     label: "1000ポイント1分前" },
+      3000: { id: "pointSpawn",    label: "1000ポイント湧くよ！" },
+
+      840:  { id: "castle1min",    label: "2城・3城1分前" },
+      898:  { id: "castleStart",   label: "2城・3城開始！" },
+
+      1560: { id: "center1min",    label: "中央1分前" },
+      1618: { id: "centerStart",   label: "中央開始" },
+
+      2040: { id: "castle14_1min",  label: "1・4城1分前" },
+      2098: { id: "castle14_start", label: "1・4城開始！" },
+
+      3358: { id: "custom242",     label: "残り242秒前" }
     };
 
     function startTimer() {
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
+
+      const future = new Date(startTime.getTime() + totalSeconds * 1000);
+      document.getElementById("nextTime").textContent =
+        "60分後の時刻: " + future.toLocaleTimeString();
+      document.getElementById("history").innerHTML = "";
+
+      // ✅ AudioContext（音量ブースト用）をユーザー操作内で作成
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      // ✅ 正しい boostAudio 関数（1.5倍ブースト）
+      function boostAudio(audioElement, gainValue = 1.5) {
+        if (!audioElement) return;
+        const source = audioCtx.createMediaElementSource(audioElement);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = gainValue;
+        source.connect(gainNode).connect(audioCtx.destination);
+      }
+
       // ✅ 全音声を1.5倍にブースト
       Object.values(eventMap).forEach(e => {
         const a = document.getElementById(e.id);
         boostAudio(a, 1.5);
       });
-      boostAudio(document.getElementById("endSound"), 1.5);    
-      const future = new Date(startTime.getTime() + totalSeconds * 1000);
-      document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
-      document.getElementById("history").innerHTML = "";
+      boostAudio(document.getElementById("endSound"), 1.5);
 
+      // ついでに事前ロード
       Object.values(eventMap).forEach(e => {
         try {
           document.getElementById(e.id).load();
-        } catch (e) {}
+        } catch (err) {}
       });
       document.getElementById("endSound").load();
 
@@ -160,7 +188,8 @@
         const remaining = totalSeconds - elapsed;
         const minutes = Math.floor(remaining / 60);
         const seconds = remaining % 60;
-        document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
+        document.getElementById("countdown").textContent =
+          `残り時間: ${minutes}分${seconds}秒`;
 
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
           const { id, label } = eventMap[elapsed];
@@ -185,7 +214,8 @@
           endAudio.currentTime = 0;
           endAudio.play();
           const entry = document.createElement("div");
-          entry.textContent = `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
+          entry.textContent =
+            `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
           const history = document.getElementById("history");
           history.insertBefore(entry, history.firstChild);
         }
