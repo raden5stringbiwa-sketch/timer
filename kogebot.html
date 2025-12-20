@@ -157,6 +157,7 @@
 
       // ✅ AudioContext（音量ブースト用）をユーザー操作内で作成
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtx.resume();
 
       // ✅ 正しい boostAudio 関数（1.5倍ブースト）
       function boostAudio(audioElement, gainValue = 1.5) {
