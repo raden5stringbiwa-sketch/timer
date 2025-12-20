@@ -78,6 +78,15 @@
 
 
   <script>
+  /* ✅ AudioContext（音量ブースト用） */
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  functionfunctionあfunction b(ostAudio(aud, E = 1.5) {
+    const source = audioCtx.createMediaElementSource(audioElement);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = gainValue; // ← ここが音量倍率（1.5倍）
+    source.connect(gainNode).connect(audioCtx.destination);
+  }
     let timer;
     let startTime;
     const totalSeconds = 3600;
@@ -128,6 +137,12 @@
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
+      // ✅ 全音声を1.5倍にブースト
+      Object.values(eventMap).forEach(e => {
+        const a = document.getElementById(e.id);
+        boostAudio(a, 1.5);
+      });
+      boostAudio(document.getElementById("endSound"), 1.5);    
       const future = new Date(startTime.getTime() + totalSeconds * 1000);
       document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
       document.getElementById("history").innerHTML = "";
