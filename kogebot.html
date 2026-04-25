@@ -62,6 +62,7 @@
   <!-- 音声ファイル定義 -->
   <audio id="buff90" src="buff_90sec.mp3" preload="auto"></audio>
   <audio id="buff30" src="buff_30sec.mp3" preload="auto"></audio>
+  <audio id="buff10" src="buff_10sec.mp3" preload="auto"></audio>
   <audio id="buffSpawn" src="buff_spawn.mp3" preload="auto"></audio>
   <audio id="tower1min" src="tower_1min.mp3" preload="auto"></audio>
   <audio id="towerStart" src="tower_start.mp3" preload="auto"></audio>
@@ -84,21 +85,26 @@
     const playedEvents = new Set();
 
     const eventMap = {
-      140: { id: "buff90", label: "バフ1分半前" },
+      149: { id: "buff90", label: "バフ1分半前" },
       210: { id: "buff30", label: "バフ30秒前" },
-      238: { id: "buffSpawn", label: "バフ湧くよ！" },
+      229: { id: "buff10", label: "バフ10秒前" },
+      239: { id: "buffSpawn", label: "バフ湧くよ！" },
       650: { id: "buff90", label: "バフ1分半前" },
       720: { id: "buff30", label: "バフ30秒前" },
-      748: { id: "buffSpawn", label: "バフ湧くよ！" },
+      739: { id: "buff10", label: "バフ10秒前" },
+      749: { id: "buffSpawn", label: "バフ湧くよ！" },
       1250: { id: "buff90", label: "バフ1分半前" },
       1320: { id: "buff30", label: "バフ30秒前" },
-      1348: { id: "buffSpawn", label: "バフ湧くよ！" },
+      1339: { id: "buff10", label: "バフ10秒前" },
+      1349: { id: "buffSpawn", label: "バフ湧くよ！" },
       1850: { id: "buff90", label: "バフ1分半前" },
       1920: { id: "buff30", label: "バフ30秒前" },
-      1948: { id: "buffSpawn", label: "バフ湧くよ！" },
+      1939: { id: "buff10", label: "バフ10秒前" },
+      1949: { id: "buffSpawn", label: "バフ湧くよ！" },
       2450: { id: "buff90", label: "バフ1分半前" },
       2520: { id: "buff30", label: "バフ30秒前" },
-      2548: { id: "buffSpawn", label: "バフ湧くよ！" },
+      2539: { id: "buff10", label: "バフ10秒前" },
+      2549: { id: "buffSpawn", label: "バフ湧くよ！" },
       3050: { id: "buff90", label: "バフ1分半前" },
       3120: { id: "buff30", label: "バフ30秒前" },
       3148: { id: "buffSpawn", label: "バフ湧くよ！" },
