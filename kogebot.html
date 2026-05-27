@@ -12,19 +12,26 @@
       padding: 30px;
     }
         /* ロゴとタイトル */
-    #logoArea {
-      margin-bottom: 10px;
-    }
-    #allianceLogo {
-      width: 140px;
-      border-radius: 8px;
-      box-shadow: 0 0 12px rgba(0, 255, 100, 0.4);
-      opacity: 0.95;
-    }
+#titleRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; /* ロゴと文字の間隔 */
+  margin-bottom: 10px;
+}
+
+.titleLogo {
+  width: 60px;   /* ← タイトルと同じくらいの高さに揃える */
+  height: 60px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 255, 100, 0.35);
+  opacity: 0.95;
+}
     h1 {
       color: #ff6600;
       font-size: 36px;
-      margin-top: 5px;
+      margin: 0;
     }
     #countdown, #nextTime {
       font-size: 24px;
@@ -72,11 +79,11 @@
 </head>
 <body>
  <!-- 同盟ロゴ -->
-  <div id="logoArea">
-    <img src="alliance_logo.jpg" alt="Alliance Logo" id="allianceLogo">
+  <div id="titleRow">
+  <img src="alliance_logo.jpg" class="titleLogo">
+  <h1>ロボットこげちゃん</h1>
+  <img src="alliance_logo.jpg" class="titleLogo">
   </div>
-  
-  <h1> ロボットこげちゃん </h1>
   <div id="credit">
   © 殺罰 — Crafted by 豆大福
   </div>
