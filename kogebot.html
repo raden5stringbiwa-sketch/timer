@@ -126,6 +126,7 @@
     let startTime;
     const totalSeconds = 3600;
     const playedEvents = new Set();
+    let audioBoosted = false; // ← 初回だけブーストするためのフラグ
 
     const eventMap = {
       149: { id: "buff90", label: "バフ1分半前" },
@@ -172,7 +173,7 @@
       2098: { id: "castle14_start", label: "1・4城開始！" },
     };
 
-    /* ★ 音量ブースト（1回だけ） */
+    /* ★ AudioContext（1回だけ） */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function boostAudio(audioElement, gainValue = 1.8) {
@@ -183,18 +184,20 @@
       source.connect(gainNode).connect(audioCtx.destination);
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      Object.values(eventMap).forEach(e => {
-        boostAudio(document.getElementById(e.id), 1.8);
-      });
-      boostAudio(document.getElementById("endSound"), 1.8);
-    });
-
     /* ★ タイマー本体 */
     function startTimer() {
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
+
+      /* ★ 初回だけ音量ブースト（ユーザー操作後なので音が出る） */
+      if (!audioBoosted) {
+        Object.values(eventMap).forEach(e => {
+          boostAudio(document.getElementById(e.id), 1.8);
+        });
+        boostAudio(document.getElementById("endSound"), 1.8);
+        audioBoosted = true;
+      }
 
       const future = new Date(startTime.getTime() + totalSeconds * 1000);
       document.getElementById("nextTime").textContent =
