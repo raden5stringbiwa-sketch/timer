@@ -66,10 +66,10 @@
       line-height: 1.4;
     }
 
-    /* ★ 殺罰カラーの深緑グラデボタン（①） */
+    /* ★ 殺罰カラーの深緑グラデボタン */
     #startButton {
       background: linear-gradient(45deg, #006633, #004422);
-      color: #ffdd55; /* 金色 */
+      color: #ffdd55;
       font-size: 24px;
       font-weight: bold;
       padding: 16px 32px;
@@ -126,7 +126,7 @@
     let startTime;
     const totalSeconds = 3600;
     const playedEvents = new Set();
-    let audioBoosted = false; // ← 初回だけブーストするためのフラグ
+    let audioBoosted = false;
 
     const eventMap = {
       149: { id: "buff90", label: "バフ1分半前" },
@@ -186,11 +186,15 @@
 
     /* ★ タイマー本体 */
     function startTimer() {
+
+      /* ★★★ 最重要：ユーザー操作後に AudioContext を解放 ★★★ */
+      audioCtx.resume();
+
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
 
-      /* ★ 初回だけ音量ブースト（ユーザー操作後なので音が出る） */
+      /* ★ 初回だけ音量ブースト（音が確実に出る） */
       if (!audioBoosted) {
         Object.values(eventMap).forEach(e => {
           boostAudio(document.getElementById(e.id), 1.8);
