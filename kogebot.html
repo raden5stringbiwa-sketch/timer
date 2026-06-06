@@ -171,6 +171,23 @@
       document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
       document.getElementById("history").innerHTML = "";
 
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function boostAudio(audioElement, gainValue = 1.8) {
+      if (!audioElement) return;
+      const source = audioCtx.createMediaElementSource(audioElement);
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = gainValue; // ← 1.8倍に設定
+      source.connect(gainNode).connect(audioCtx.destination);
+    }
+
+   // ★ 全音声を1.8倍にブースト
+    Object.values(eventMap).forEach(e => {
+      const a = document.getElementById(e.id);
+      boostAudio(a, 1.8);
+    });
+    boostAudio(document.getElementById("endSound"), 1.8);
+      
       Object.values(eventMap).forEach(e => {
         try {
           document.getElementById(e.id).load();
