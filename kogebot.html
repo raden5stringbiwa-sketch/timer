@@ -11,44 +11,32 @@
       text-align: center;
       padding: 30px;
     }
+        /* ロゴとタイトル */
+#titleRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; /* ロゴと文字の間隔 */
+  margin-bottom: 10px;
+}
 
-    /* ロゴとタイトル */
-    #titleRow {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 10px;
-    }
-
-    .titleLogo {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      border-radius: 6px;
-      box-shadow: 0 0 8px rgba(0, 255, 100, 0.35);
-      opacity: 0.95;
-    }
-
+.titleLogo {
+  width: 60px;   /* ← タイトルと同じくらいの高さに揃える */
+  height: 60px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 255, 100, 0.35);
+  opacity: 0.95;
+}
     h1 {
       color: #ff6600;
       font-size: 36px;
       margin: 0;
     }
-
-    #credit {
-      margin-top: 5px;
-      color: #66ff66;
-      font-size: 16px;
-      opacity: 0.85;
-      letter-spacing: 1px;
-    }
-
     #countdown, #nextTime {
       font-size: 24px;
       margin: 10px 0;
     }
-
     #history {
       margin-top: 30px;
       max-width: 600px;
@@ -56,7 +44,6 @@
       margin-right: auto;
       text-align: left;
     }
-
     #history div {
       background-color: #222;
       padding: 10px 14px;
@@ -65,46 +52,47 @@
       font-size: 18px;
       line-height: 1.4;
     }
-
-    /* ★ 殺罰カラーの深緑グラデボタン */
     #startButton {
-      background: linear-gradient(45deg, #006633, #004422);
-      color: #ffdd55;
+      background: linear-gradient(45deg, #ff6600, #ff3300);
+      color: #fff;
       font-size: 24px;
       font-weight: bold;
       padding: 16px 32px;
       border: none;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 255, 100, 0.4);
+      box-shadow: 0 0 15px #ff6600;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.3s;
     }
-
     #startButton:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 255, 100, 0.6);
+      box-shadow: 0 0 25px #ff3300;
     }
+　  #credit {
+      margin-top: 5px;
+      color: #66ff66;
+      font-size: 16px;
+      opacity: 0.85;
+      letter-spacing: 1px;
+  　}
   </style>
 </head>
 <body>
-
-  <!-- ロゴ＋タイトル -->
+ <!-- 同盟ロゴ -->
   <div id="titleRow">
-    <img src="alliance_logo.jpg" class="titleLogo">
-    <h1>ロボットこげちゃん</h1>
-    <img src="alliance_logo.jpg" class="titleLogo">
+  <img src="alliance_logo.jpg" class="titleLogo">
+  <h1>ロボットこげちゃん</h1>
+  <img src="alliance_logo.jpg" class="titleLogo">
   </div>
-
   <div id="credit">
-    © 殺罰 — Crafted by 豆大福
+  © 殺罰 — Crafted by 豆大福
   </div>
-
   <button id="startButton" onclick="startTimer()">🔥 タイマー開始 🔥</button>
   <p id="countdown">残り時間: -</p>
   <p id="nextTime">60分後の時刻: -</p>
   <div id="history"></div>
 
-  <!-- 音声ファイル -->
+  <!-- 音声ファイル定義 -->
   <audio id="buff90" src="buff_90sec.mp3" preload="auto"></audio>
   <audio id="buff30" src="buff_30sec.mp3" preload="auto"></audio>
   <audio id="buff10" src="buff_10sec.mp3" preload="auto"></audio>
@@ -120,13 +108,14 @@
   <audio id="endSound" src="end.mp3" preload="auto"></audio>
   <audio id="castle14_1min" src="castle14_1min.mp3" preload="auto"></audio>
   <audio id="castle14_start" src="castle14_start.mp3" preload="auto"></audio>
+  
+
 
   <script>
     let timer;
     let startTime;
     const totalSeconds = 3600;
     const playedEvents = new Set();
-    let audioBoosted = false;
 
     const eventMap = {
       149: { id: "buff90", label: "バフ1分半前" },
@@ -171,45 +160,21 @@
       1618: { id: "centerStart", label: "中央開始" },
       2040: { id: "castle14_1min", label: "1・4城1分前" },
       2098: { id: "castle14_start", label: "1・4城開始！" },
+      
     };
 
-    /* ★ AudioContext（1回だけ） */
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function boostAudio(audioElement, gainValue = 1.8) {
-      if (!audioElement) return;
-      const source = audioCtx.createMediaElementSource(audioElement);
-      const gainNode = audioCtx.createGain();
-      gainNode.gain.value = gainValue;
-      source.connect(gainNode).connect(audioCtx.destination);
-    }
-
-    /* ★ タイマー本体 */
     function startTimer() {
-
-      /* ★★★ 最重要：ユーザー操作後に AudioContext を解放 ★★★ */
-      audioCtx.resume();
-
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
-
-      /* ★ 初回だけ音量ブースト（音が確実に出る） */
-      if (!audioBoosted) {
-        Object.values(eventMap).forEach(e => {
-          boostAudio(document.getElementById(e.id), 1.8);
-        });
-        boostAudio(document.getElementById("endSound"), 1.8);
-        audioBoosted = true;
-      }
-
       const future = new Date(startTime.getTime() + totalSeconds * 1000);
-      document.getElementById("nextTime").textContent =
-        "60分後の時刻: " + future.toLocaleTimeString();
+      document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
       document.getElementById("history").innerHTML = "";
 
       Object.values(eventMap).forEach(e => {
-        try { document.getElementById(e.id).load(); } catch {}
+        try {
+          document.getElementById(e.id).load();
+        } catch (e) {}
       });
       document.getElementById("endSound").load();
 
@@ -217,11 +182,9 @@
         const now = new Date();
         const elapsed = Math.floor((now - startTime) / 1000);
         const remaining = totalSeconds - elapsed;
-
         const minutes = Math.floor(remaining / 60);
         const seconds = remaining % 60;
-        document.getElementById("countdown").textContent =
-          `残り時間: ${minutes}分${seconds}秒`;
+        document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
 
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
           const { id, label } = eventMap[elapsed];
@@ -229,15 +192,13 @@
           if (audio) {
             audio.currentTime = 0;
             audio.play();
-
             const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
             const ss = String(elapsed % 60).padStart(2, '0');
             const timestamp = now.toLocaleTimeString();
-
             const entry = document.createElement("div");
             entry.textContent = `${mm}分${ss}秒経過・${label}・${timestamp}`;
-            document.getElementById("history").insertBefore(entry, history.firstChild);
-
+            const history = document.getElementById("history");
+            history.insertBefore(entry, history.firstChild);
             playedEvents.add(elapsed);
           }
         }
@@ -247,11 +208,10 @@
           const endAudio = document.getElementById("endSound");
           endAudio.currentTime = 0;
           endAudio.play();
-
           const entry = document.createElement("div");
-          entry.textContent =
-            `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
-          document.getElementById("history").insertBefore(entry, history.firstChild);
+          entry.textContent = `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
+          const history = document.getElementById("history");
+          history.insertBefore(entry, history.firstChild);
         }
       }, 1000);
     }
