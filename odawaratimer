@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ろぼっとこげちゃん</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+        /* ロゴとタイトル */
+#titleRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; /* ロゴと文字の間隔 */
+  margin-bottom: 10px;
+}
 
+.titleLogo {
+  width: 60px;   /* ← タイトルと同じくらいの高さに揃える */
+  height: 60px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 255, 100, 0.35);
+  opacity: 0.95;
+}
+    h1 {
+      color: #ff6600;
+      font-size: 36px;
+      margin: 0;
+    }
+    #countdown, #nextTime {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    #history {
+      margin-top: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    #history div {
+      background-color: #222;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      border-left: 4px solid #ff6600;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+#startButton {
+  background: linear-gradient(45deg, #006633, #004422); /* 深緑グラデ */
+  color: #ffdd55; /* 金色 */
+  font-size: 24px;
+  font-weight: bold;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 100, 0.4); /* 緑の光 */
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+#startButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 255, 100, 0.6);
+    }
+　  #credit {
+      margin-top: 5px;
+      color: #66ff66;
+      font-size: 16px;
+      opacity: 0.85;
+      letter-spacing: 1px;
+  　}
+  </style>
+</head>
+<body>
+ <!-- 同盟ロゴ -->
+  <div id="titleRow">
+  <img src="alliance_logo.jpg" class="titleLogo">
+  <h1>ロボットこげちゃん</h1>
+  <img src="alliance_logo.jpg" class="titleLogo">
+  </div>
+  <div id="credit">
+  © 殺罰 — Crafted by 豆大福
+  </div>
+  <button id="startButton" onclick="startTimer()">🔥 タイマー開始 🔥</button>
+  <p id="countdown">残り時間: -</p>
+  <p id="nextTime">60分後の時刻: -</p>
+  <div id="history"></div>
+
+  <!-- 音声ファイル定義 -->
+  <audio id="buff90" src="buff_90sec.m4a" preload="auto"></audio>
+  <audio id="buff30" src="buff_30sec.m4a" preload="auto"></audio>
+  <audio id="buff10" src="buff_10sec.m4a" preload="auto"></audio>
+  <audio id="buffSpawn" src="buff_spawn.m4a" preload="auto"></audio>
+  <audio id="tower1min" src="tower_1min.mp3" preload="auto"></audio>
+  <audio id="towerStart" src="tower_start.mp3" preload="auto"></audio>
+  <audio id="point1min" src="point_1min.mp3" preload="auto"></audio>
+  <audio id="pointSpawn" src="point_spawn.mp3" preload="auto"></audio>
+  <audio id="castle1min" src="castle_1min.m4a" preload="auto"></audio>
+  <audio id="castleStart" src="castle_start.mp3" preload="auto"></audio>
+  <audio id="center1min" src="center_1min.mp3" preload="auto"></audio>
+  <audio id="centerStart" src="center_start.mp3" preload="auto"></audio>
+  <audio id="endSound" src="end.mp3" preload="auto"></audio>
+  <audio id="castle14_1min" src="castle14_1min.mp3" preload="auto"></audio>
+  <audio id="castle14_start" src="castle14_start.mp3" preload="auto"></audio>
+  <audio id="0628" src="0628.m4a" preload="auto"></audio>
+
+
+  <script>
+    let timer;
+    let startTime;
+    const totalSeconds = 3600;
+    const playedEvents = new Set();
+
+    const eventMap = {
+      149: { id: "buff90", label: "バフ1分半前" },
+      210: { id: "buff30", label: "バフ30秒前" },
+      229: { id: "buff10", label: "バフ10秒前" },
+      239: { id: "buffSpawn", label: "バフ湧くよ！" },
+      650: { id: "buff90", label: "バフ1分半前" },
+      655: { id: "0628", label: "20260628作戦" },
+      /*720: { id: "buff30", label: "バフ30秒前" },
+      739: { id: "buff10", label: "バフ10秒前" },
+      749: { id: "buffSpawn", label: "バフ湧くよ！" },*/
+      1250: { id: "buff90", label: "バフ1分半前" },
+      1320: { id: "buff30", label: "バフ30秒前" },
+      1339: { id: "buff10", label: "バフ10秒前" },
+      1349: { id: "buffSpawn", label: "バフ湧くよ！" },
+      1850: { id: "buff90", label: "バフ1分半前" },
+      1920: { id: "buff30", label: "バフ30秒前" },
+      1939: { id: "buff10", label: "バフ10秒前" },
+      1949: { id: "buffSpawn", label: "バフ湧くよ！" },
+      2450: { id: "buff90", label: "バフ1分半前" },
+      2520: { id: "buff30", label: "バフ30秒前" },
+      2539: { id: "buff10", label: "バフ10秒前" },
+      2549: { id: "buffSpawn", label: "バフ湧くよ！" },
+      3050: { id: "buff90", label: "バフ1分半前" },
+      3120: { id: "buff30", label: "バフ30秒前" },
+      3139: { id: "buff10", label: "バフ10秒前" },
+      3149: { id: "buffSpawn", label: "バフ湧くよ！" },
+      360: { id: "tower1min", label: "望楼1分前" },
+      418: { id: "towerStart", label: "望楼開始！" },
+      540: { id: "point1min", label: "1000ポイント1分前" },
+      600: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      1140: { id: "point1min", label: "1000ポイント1分前" },
+      1200: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      1740: { id: "point1min", label: "1000ポイント1分前" },
+      1800: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      2340: { id: "point1min", label: "1000ポイント1分前" },
+      2400: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      2940: { id: "point1min", label: "1000ポイント1分前" },
+      3000: { id: "pointSpawn", label: "1000ポイント湧くよ！" },
+      840: { id: "castle1min", label: "2城・3城1分前" },
+      898: { id: "castleStart", label: "2城・3城開始！" },
+      1560: { id: "center1min", label: "中央1分前" },
+      1618: { id: "centerStart", label: "中央開始" },
+      2040: { id: "castle14_1min", label: "1・4城1分前" },
+      2098: { id: "castle14_start", label: "1・4城開始！" },
+      
+    };
+
+    function startTimer() {
+      clearInterval(timer);
+      playedEvents.clear();
+      startTime = new Date();
+      const future = new Date(startTime.getTime() + totalSeconds * 1000);
+      document.getElementById("nextTime").textContent = "60分後の時刻: " + future.toLocaleTimeString();
+      document.getElementById("history").innerHTML = "";
+
+      Object.values(eventMap).forEach(e => {
+        try {
+          document.getElementById(e.id).load();
+        } catch (e) {}
+      });
+      document.getElementById("endSound").load();
+
+      timer = setInterval(() => {
+        const now = new Date();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        const remaining = totalSeconds - elapsed;
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+        document.getElementById("countdown").textContent = `残り時間: ${minutes}分${seconds}秒`;
+
+        if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
+          const { id, label } = eventMap[elapsed];
+          const audio = document.getElementById(id);
+          if (audio) {
+            audio.currentTime = 0;
+            audio.play();
+            const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const ss = String(elapsed % 60).padStart(2, '0');
+            const timestamp = now.toLocaleTimeString();
+            const entry = document.createElement("div");
+            entry.textContent = `${mm}分${ss}秒経過・${label}・${timestamp}`;
+            const history = document.getElementById("history");
+            history.insertBefore(entry, history.firstChild);
+            playedEvents.add(elapsed);
+          }
+        }
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          const endAudio = document.getElementById("endSound");
+          endAudio.currentTime = 0;
+          endAudio.play();
+          const entry = document.createElement("div");
+          entry.textContent = `60分00秒経過・タイマー終了・${now.toLocaleTimeString()}`;
+          const history = document.getElementById("history");
+          history.insertBefore(entry, history.firstChild);
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
