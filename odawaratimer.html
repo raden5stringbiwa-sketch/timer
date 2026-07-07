@@ -150,21 +150,43 @@ async function unlockAudio() {
     };
 async function warmupAll() {
 
-  for (const e of Object.values(eventMap)) {
+  const audios = document.querySelectorAll("audio");
 
-    const audio = document.getElementById(e.id);
+  for (const audio of audios) {
+
+    // silentはunlockAudioで処理済み
+    if (audio.id === "silent") continue;
 
     try {
+
       audio.volume = 0;
+
       audio.currentTime = 0;
 
+      // 読み込み待ち
+      if (audio.readyState < 3) {
+        await new Promise(resolve => {
+          audio.addEventListener(
+            "canplaythrough",
+            resolve,
+            { once:true }
+          );
+          audio.load();
+        });
+      }
+
       await audio.play();
+
+      // 少しだけ再生時間を確保
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       audio.pause();
       audio.currentTime = 0;
       audio.volume = 1;
 
-    } catch (err) {}
+    } catch (err) {
+      console.log("warmup error", audio.id, err);
+    }
 
   }
 
@@ -203,9 +225,10 @@ async function warmupAll() {
           const { id, label } = eventMap[elapsed];
           const audio = document.getElementById(id);
 
-          if (audio) {
-            audio.currentTime = 0;
-            audio.play();
+if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.play().catch(e => console.log(e));
 
             const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
             const ss = String(elapsed % 60).padStart(2, '0');
