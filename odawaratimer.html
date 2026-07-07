@@ -12,7 +12,6 @@
       padding: 30px;
     }
 
-    /* ロゴとタイトル */
     #titleRow {
       display: flex;
       justify-content: center;
@@ -87,10 +86,9 @@
 </head>
 <body>
 
-  <!-- 同盟ロゴ -->
   <div id="titleRow">
     <img src="alliance_logo.jpg" class="titleLogo">
-    <h1>🏰 小田原タイマー 🏰</h1>
+    <h1>🏮小田原タイマー🏮</h1>
     <img src="alliance_logo.jpg" class="titleLogo">
   </div>
 
@@ -103,19 +101,18 @@
   <p id="nextTime">60分後の時刻: -</p>
   <div id="history"></div>
 
-  <!-- 小田原征伐β：音声ファイル定義 -->
+  <!-- 無音ファイル（自動再生解除用） -->
+  <audio id="silent" src="silent.mp3" preload="auto"></audio>
 
-  <!-- 21:20 東西終了＋南北/中央開放 -->
+  <!-- 小田原征伐β：音声ファイル定義 -->
   <audio id="phase1200_1min"  src="phase1200_1min.m4a" preload="auto"></audio>
   <audio id="phase1200_10sec" src="phase1200_10sec.m4a" preload="auto"></audio>
   <audio id="phase1200"       src="phase1200.m4a" preload="auto"></audio>
 
-  <!-- 21:35 浅瀬化 -->
   <audio id="phaseShallow_1min"  src="phaseShallow_1min.m4a" preload="auto"></audio>
   <audio id="phaseShallow_10sec" src="phaseShallow_10sec.m4a" preload="auto"></audio>
   <audio id="phaseShallow"       src="phaseShallow.m4a" preload="auto"></audio>
 
-  <!-- 21:50 沼地消失 -->
   <audio id="phaseSwamp_1min"  src="phaseSwamp_1min.m4a" preload="auto"></audio>
   <audio id="phaseSwamp_10sec" src="phaseSwamp_10sec.m4a" preload="auto"></audio>
   <audio id="phaseSwampGone"   src="phaseSwampGone.m4a" preload="auto"></audio>
@@ -126,26 +123,30 @@
     const totalSeconds = 3600;
     const playedEvents = new Set();
 
+    /* 自動再生ブロック解除（ろぼっとこげちゃんと同じ挙動にする鍵） */
+    function unlockAudio() {
+      const s = document.getElementById("silent");
+      s.play().catch(()=>{});
+    }
+
     const eventMap = {
+      1138: { id: "phase1200_1min",  label: "東西戦闘終了・南北/中央開放 1分前" },
+      1188: { id: "phase1200_10sec", label: "東西戦闘終了・南北/中央開放 10秒前" },
+      1198: { id: "phase1200",       label: "東西エリアの戦闘が終了しました。" },
 
-  /* 21:20 東西終了＋南北/中央開放 */
-  1138: { id: "phase1200_1min",  label: "東西戦闘終了・南北/中央開放 1分前" },
-  1188: { id: "phase1200_10sec", label: "東西戦闘終了・南北/中央開放 10秒前" },
-  1198: { id: "phase1200",       label: "東西エリアの戦闘が終了しました。" },
+      2038: { id: "phaseShallow_1min",  label: "浅瀬化（中央進入可能）1分前" },
+      2088: { id: "phaseShallow_10sec", label: "浅瀬化（中央進入可能）10秒前" },
+      2098: { id: "phaseShallow",       label: "河川が浅瀬に変化しました。" },
 
-  /* 21:35 浅瀬化 */
-  2038: { id: "phaseShallow_1min",  label: "浅瀬化（中央進入可能）1分前" },
-  2088: { id: "phaseShallow_10sec", label: "浅瀬化（中央進入可能）10秒前" },
-  2098: { id: "phaseShallow",       label: "河川が浅瀬に変化しました。" },
-
-  /* 21:50 沼地消失 */
-  2938: { id: "phaseSwamp_1min",  label: "沼地消失 1分前" },
-  2988: { id: "phaseSwamp_10sec", label: "沼地消失 10秒前" },
-  2998: { id: "phaseSwampGone",   label: "中央の沼地が消失しました。" }
-};
-
+      2938: { id: "phaseSwamp_1min",  label: "沼地消失 1分前" },
+      2988: { id: "phaseSwamp_10sec", label: "沼地消失 10秒前" },
+      2998: { id: "phaseSwampGone",   label: "中央の沼地が消失しました。" }
+    };
 
     function startTimer() {
+
+      unlockAudio();  /* ← これが冒頭の音を100%鳴らす */
+
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
