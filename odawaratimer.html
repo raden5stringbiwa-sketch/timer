@@ -123,11 +123,17 @@
     const totalSeconds = 3600;
     const playedEvents = new Set();
 
-    /* 自動再生ブロック解除（ろぼっとこげちゃんと同じ挙動にする鍵） */
-    function unlockAudio() {
-      const s = document.getElementById("silent");
-      s.play().catch(()=>{});
-    }
+/* 自動再生ブロック解除 */
+async function unlockAudio() {
+  const s = document.getElementById("silent");
+
+  try {
+    s.currentTime = 0;
+    await s.play();
+    s.pause();
+    s.currentTime = 0;
+  } catch (e) {}
+}
 
     const eventMap = {
       1138: { id: "phase1200_1min",  label: "東西戦闘終了・南北/中央開放 1分前" },
@@ -142,11 +148,34 @@
       2988: { id: "phaseSwamp_10sec", label: "沼地消失 10秒前" },
       2998: { id: "phaseSwampGone",   label: "中央の沼地が消失しました。" }
     };
+async function warmupAll() {
 
-    function startTimer() {
+  for (const e of Object.values(eventMap)) {
 
-      unlockAudio();  /* ← これが冒頭の音を100%鳴らす */
+    const audio = document.getElementById(e.id);
 
+    try {
+      audio.volume = 0;
+      audio.currentTime = 0;
+
+      await audio.play();
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 1;
+
+    } catch (err) {}
+
+  }
+
+}
+
+    
+    async function startTimer() {
+
+      await unlockAudio();
+      await warmupAll();
+      
       clearInterval(timer);
       playedEvents.clear();
       startTime = new Date();
@@ -157,11 +186,7 @@
 
       document.getElementById("history").innerHTML = "";
 
-      Object.values(eventMap).forEach(e => {
-        try {
-          document.getElementById(e.id).load();
-        } catch (e) {}
-      });
+
 
       timer = setInterval(() => {
         const now = new Date();
