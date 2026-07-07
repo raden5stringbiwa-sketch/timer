@@ -102,20 +102,20 @@
   <div id="history"></div>
 
   <!-- 無音ファイル（自動再生解除用） -->
-  <audio id="silent" src="silent.mp3" preload="auto"></audio>
+  <audio id="silent" src="silent.mp3" preload="none"></audio>
 
   <!-- 小田原征伐β：音声ファイル定義 -->
-  <audio id="phase1200_1min"  src="phase1200_1min.m4a" preload="auto"></audio>
-  <audio id="phase1200_10sec" src="phase1200_10sec.m4a" preload="auto"></audio>
-  <audio id="phase1200"       src="phase1200.m4a" preload="auto"></audio>
+  <audio id="phase1200_1min"  src="phase1200_1min.m4a" preload="none"></audio>
+  <audio id="phase1200_10sec" src="phase1200_10sec.m4a" preload="none"></audio>
+  <audio id="phase1200"       src="phase1200.m4a" preload="none"></audio>
 
-  <audio id="phaseShallow_1min"  src="phaseShallow_1min.m4a" preload="auto"></audio>
-  <audio id="phaseShallow_10sec" src="phaseShallow_10sec.m4a" preload="auto"></audio>
-  <audio id="phaseShallow"       src="phaseShallow.m4a" preload="auto"></audio>
+  <audio id="phaseShallow_1min"  src="phaseShallow_1min.m4a" preload="none"></audio>
+  <audio id="phaseShallow_10sec" src="phaseShallow_10sec.m4a" preload="none"></audio>
+  <audio id="phaseShallow"       src="phaseShallow.m4a" preload="none"></audio>
 
-  <audio id="phaseSwamp_1min"  src="phaseSwamp_1min.m4a" preload="auto"></audio>
-  <audio id="phaseSwamp_10sec" src="phaseSwamp_10sec.m4a" preload="auto"></audio>
-  <audio id="phaseSwampGone"   src="phaseSwampGone.m4a" preload="auto"></audio>
+  <audio id="phaseSwamp_1min"  src="phaseSwamp_1min.m4a" preload="none"></audio>
+  <audio id="phaseSwamp_10sec" src="phaseSwamp_10sec.m4a" preload="none"></audio>
+  <audio id="phaseSwampGone"   src="phaseSwampGone.m4a" preload="none"></audio>
 
   <script>
     let timer;
@@ -196,7 +196,7 @@ async function warmupAll() {
     async function startTimer() {
 
       await unlockAudio();
-      await warmupAll();
+  
       
       clearInterval(timer);
       playedEvents.clear();
@@ -223,12 +223,18 @@ async function warmupAll() {
 
         if (eventMap[elapsed] && !playedEvents.has(elapsed)) {
           const { id, label } = eventMap[elapsed];
-          const audio = document.getElementById(id);
+const oldAudio = document.getElementById(id);
 
-if (audio) {
-    audio.pause();
-    audio.currentTime = 0;
+if (oldAudio) {
+
+    const src = oldAudio.src;
+
+    const audio = new Audio(src);
+    audio.volume = 1;
+
     audio.play().catch(e => console.log(e));
+
+}
 
             const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
             const ss = String(elapsed % 60).padStart(2, '0');
