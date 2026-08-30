@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -136,9 +136,9 @@ async function unlockAudio() {
 }
 
     const eventMap = {
+      1018: { id: "phase1200_3min",  label: "東西戦闘終了・南北/中央開放 3分前" },
       1138: { id: "phase1200_1min",  label: "東西戦闘終了・南北/中央開放 1分前" },
       1188: { id: "phase1200_10sec", label: "東西戦闘終了・南北/中央開放 10秒前" },
-      1198: { id: "phase1200",       label: "東西エリアの戦闘が終了しました。" },
 
       2038: { id: "phaseShallow_1min",  label: "浅瀬化（中央進入可能）1分前" },
       2088: { id: "phaseShallow_10sec", label: "浅瀬化（中央進入可能）10秒前" },
@@ -251,7 +251,6 @@ if (oldAudio) {
     playedEvents.add(elapsed);
   }
 
-  // ★★★ ここが消えていた ★★★
   if (remaining <= 0) {
     clearInterval(timer);
 
@@ -262,7 +261,6 @@ if (oldAudio) {
     const history = document.getElementById("history");
     history.insertBefore(entry, history.firstChild);
   }
-  // ★★★ この閉じカッコが必要 ★★★
 
 }, 1000);
 
