@@ -104,20 +104,25 @@
   <!-- 無音ファイル（自動再生解除用） -->
   <audio id="silent" src="silent.mp3" preload="none"></audio>
 
-  <!-- 小田原征伐β：音声ファイル定義 -->
-  <audio id="MCcheck"  src="MCcheck.m4a" preload="none"></audio>
-  <audio id="phase1200_3min"  src="phase1200_3min.m4a" preload="none"></audio>
-  <audio id="phase1200_1min"  src="phase1200_1min.m4a" preload="none"></audio>
-  <audio id="phase1200_10sec" src="phase1200_10sec.m4a" preload="none"></audio>
+<audio id="yama_0130" src="yama_0130.m4a" preload="auto"></audio>
+<audio id="yama_0030" src="yama_0030.m4a" preload="auto"></audio>
+<audio id="yama_0010" src="yama_0010.m4a" preload="auto"></audio>
+<audio id="yama_start" src="yama_start.m4a" preload="auto"></audio>
 
+<audio id="nuke_0130" src="nuke_0130.m4a" preload="auto"></audio>
+<audio id="nuke_0030" src="nuke_0030.m4a" preload="auto"></audio>
+<audio id="nuke_0010" src="nuke_0010.m4a" preload="auto"></audio>
+<audio id="nuke_start" src="nuke_start.m4a" preload="auto"></audio>
 
-  <audio id="phaseShallow_1min"  src="phaseShallow_1min.m4a" preload="none"></audio>
-  <audio id="phaseShallow_10sec" src="phaseShallow_10sec.m4a" preload="none"></audio>
-  <audio id="phaseShallow"       src="phaseShallow.m4a" preload="none"></audio>
+<audio id="odawara_0130" src="odawara_0130.m4a" preload="auto"></audio>
+<audio id="odawara_0030" src="odawara_0030.m4a" preload="auto"></audio>
+<audio id="odawara_0010" src="odawara_0010.m4a" preload="auto"></audio>
+<audio id="odawara_start" src="odawara_start.m4a" preload="auto"></audio>
 
-  <audio id="phaseSwamp_1min"  src="phaseSwamp_1min.m4a" preload="none"></audio>
-  <audio id="phaseSwamp_10sec" src="phaseSwamp_10sec.m4a" preload="none"></audio>
-  <audio id="phaseSwampGone"   src="phaseSwampGone.m4a" preload="none"></audio>
+<audio id="bourou_0130" src="bourou_0130.m4a" preload="auto"></audio>
+<audio id="bourou_0030" src="bourou_0030.m4a" preload="auto"></audio>
+<audio id="bourou_0010" src="bourou_0010.m4a" preload="auto"></audio>
+<audio id="bourou_start" src="bourou_start.m4a" preload="auto"></audio>
 
   <script>
     let timer;
@@ -137,20 +142,33 @@ async function unlockAudio() {
   } catch (e) {}
 }
 
-    const eventMap = {
-      0003: { id: "MCcheck",  label: "マイクチェック" },
-      1018: { id: "phase1200_3min",  label: "東西戦闘終了・南北/中央開放 3分前" },
-      1138: { id: "phase1200_1min",  label: "東西戦闘終了・南北/中央開放 1分前" },
-      1188: { id: "phase1200_10sec", label: "東西戦闘終了・南北/中央開放 10秒前" },
+const eventMap = {
+  0003: { id: "MCcheck", label: "マイクチェック" },
 
-      2038: { id: "phaseShallow_1min",  label: "浅瀬化（中央進入可能）1分前" },
-      2088: { id: "phaseShallow_10sec", label: "浅瀬化（中央進入可能）10秒前" },
-      2098: { id: "phaseShallow",       label: "河川が浅瀬に変化しました。" },
+  // 山城解放（20:00）
+  1110: { id: "yama_0130", label: "山城解放 1分30秒前" },
+  1170: { id: "yama_0030", label: "山城解放 30秒前" },
+  1190: { id: "yama_0010", label: "山城解放 10秒前" },
+  1200: { id: "yama_start", label: "山城が解放されました。" },
 
-      2938: { id: "phaseSwamp_1min",  label: "沼地消失 1分前" },
-      2988: { id: "phaseSwamp_10sec", label: "沼地消失 10秒前" },
-      2998: { id: "phaseSwampGone",   label: "中央の沼地が消失しました。" }
-    };
+  // 抜け道（27:00）
+  1530: { id: "nuke_0130", label: "抜け道 1分30秒前" },
+  1590: { id: "nuke_0030", label: "抜け道 30秒前" },
+  1610: { id: "nuke_0010", label: "抜け道 10秒前" },
+  1620: { id: "nuke_start", label: "抜け道が解放されました。" },
+
+  // 小田原城（35:00）
+  2010: { id: "odawara_0130", label: "小田原城解放 1分30秒前" },
+  2070: { id: "odawara_0030", label: "小田原城解放 30秒前" },
+  2090: { id: "odawara_0010", label: "小田原城解放 10秒前" },
+  2100: { id: "odawara_start", label: "小田原城が解放されました。" },
+
+  // 中央の望楼（45:00）
+  2610: { id: "bourou_0130", label: "中央の望楼解放 1分30秒前" },
+  2670: { id: "bourou_0030", label: "中央の望楼解放 30秒前" },
+  2690: { id: "bourou_0010", label: "中央の望楼解放 10秒前" },
+  2700: { id: "bourou_start", label: "中央の望楼が解放されました。" }
+};
 async function warmupAll() {
 
   const audios = document.querySelectorAll("audio");
