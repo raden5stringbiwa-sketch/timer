@@ -103,10 +103,14 @@
 
   <!-- 無音ファイル（自動再生解除用） -->
   <audio id="silent" src="silent.mp3" preload="none"></audio>
-
-
 <audio id="MCcheck" src="MCcheck.m4a" preload="auto"></audio>      
-<audio id="yama_0130" src="yama_0130.m4a" preload="auto"></audio>
+      
+<audio id="sento_0130" src="sento_0130.m4a" preload="auto"></audio>
+<audio id="sento_0030" src="sento_0030.m4a" preload="auto"></audio>
+<audio id="sento_0010" src="sento_0010.m4a" preload="auto"></audio>
+<audio id="sento_start" src="sento_start.m4a" preload="auto"></audio>
+      
+      <audio id="yama_0130" src="yama_0130.m4a" preload="auto"></audio>
 <audio id="yama_0030" src="yama_0030.m4a" preload="auto"></audio>
 <audio id="yama_0010" src="yama_0010.m4a" preload="auto"></audio>
 <audio id="yama_start" src="yama_start.m4a" preload="auto"></audio>
@@ -147,6 +151,12 @@ async function unlockAudio() {
 const eventMap = {
   0003: { id: "MCcheck", label: "マイクチェック" },
 
+  // 山城近くへ遷都（15:00）
+  810: { id: "sento_0130", label: "山城近くへ遷都 1分30秒前" },
+  870: { id: "sento_0030", label: "山城近くへ遷都 30秒前" },
+  890: { id: "sento_0010", label: "山城近くへ遷都 10秒前" },
+  900: { id: "sento_start", label: "飛ぶよ！" },
+      
   // 山城解放（20:00）
   1110: { id: "yama_0130", label: "山城解放 1分30秒前" },
   1170: { id: "yama_0030", label: "山城解放 30秒前" },
